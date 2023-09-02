@@ -1,2 +1,3 @@
-# couchfinder
-Web application developed using Django framework.
+# Couch Finder
+
+Couchfinder is an online platform and social networking website that facilitated cultural exchange and free accommodation for travelers around the world. It allowed travelers to connect with local hosts who were willing to offer them a place to stay for free. Users could create profiles and define/change as either hosts or travelers. Travelers could search for hosts in their desired destination and send them messages to request accommodation. Hosts, in turn, could accept or decline these requests. Both hosts and travelers could leave reviews and references on each other's profiles after their stay, which helped build trust within the community. The platform included safety features, such as email verification, to enhance user security.
