@@ -28,6 +28,9 @@ if os.path.exists("env.py"):
 # Base Directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Template Directory of the project
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
 # Project Secret Key
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -77,7 +80,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
