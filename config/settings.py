@@ -42,7 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # Third party app. Has to be placed before 'django.contrib.staticfiles'
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'cloudinary',
 ]
 
 # list of middleware classes that process requests and responses
