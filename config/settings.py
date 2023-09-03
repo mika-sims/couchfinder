@@ -53,6 +53,9 @@ INSTALLED_APPS = [
 
     # Third party apps
     'cloudinary',
+    
+    # Project apps
+    'main',
 ]
 
 # list of middleware classes that process requests and responses
