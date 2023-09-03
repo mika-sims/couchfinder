@@ -1,7 +1,8 @@
 """
 Django settings for the "Couch Finder" Project.
 
-Django Version: 4.2.4.
+Django Version: 3.2 (LTS) 
+Note: This version of the Django is compatible with ElephantSQL postgresql database.
 =========================================================================
 This project is exclusively developed for educational purposes, 
 with its primary intention being to serve as an instructional tool. 
@@ -17,6 +18,7 @@ Contact Information: mikailsimsek.trb@gmail.com
 
 
 import os
+import dj_database_url
 from pathlib import Path
 
 # Get the environment variables if they exist
@@ -81,10 +83,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # Default database configuration
+    'default': dj_database_url.parse(os.environ.get('DEFAULT_DATABASE_URL'),
+                                     conn_max_age=600,
+                                     conn_health_checks=True,
+                                     ),
+    # Test database configuration
+    'test': dj_database_url.parse(os.environ.get('TEST_DATABASE_URL'),
+                                  conn_max_age=600,
+                                  conn_health_checks=True,
+                                  ),
 }
 
 
