@@ -80,6 +80,7 @@ htmlcov/
 .tox/ 
 .coverage 
 .coverage.* 
+.coveragerc
 .cache 
 .pytest_cache/ 
 nosetests.xml 
