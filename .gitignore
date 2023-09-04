@@ -141,3 +141,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 .vscode
+
+# Node modules #
+node_modules/
