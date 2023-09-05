@@ -1,6 +1,15 @@
 /* Generic styling for all screens */
 /* Font for home page subheading */
 @import url("https://fonts.googleapis.com/css2?family=Merienda:wght@800&display=swap");
+/* Main background image */
+.main-bg {
+  background-image: linear-gradient(#ffffffc7, #ffffff6e),
+    url("https://res.cloudinary.com/couchfinder/image/upload/v1693957006/main-bg_lsjoui.svg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: bottom center;
+  background-size: cover;
+}
 
 /* Style for screens below 576px */
 /* Start Navbar section */
