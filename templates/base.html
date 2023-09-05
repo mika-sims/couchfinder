@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {% load static %}
+    <!-- Bootstrap icons CDN Link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/custom.min.css' %}">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>
+        {% block title %}
+        CouchFinder | Where sharing knows no borders
+        {% endblock %}
+    </title>
+</head>
+
+<body>
+    <!-- Start Navbar -->
+    <nav class="navbar navbar-expand-lg bg-light fixed-top" id="mainNav">
+        <div class="container-fluid">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand" href="">
+                <img src="{% static 'images/logo.svg' %}" alt="logo" class="logo mt-2" />
+            </a>
+            {% if user.is_authenticated %}
+            <!-- Start Navigation items for authenticated user only -->
+            <div class="d-flex gap-3 gap-lg-5 order-lg-last mx-lg-4">
+                <div class="dropstart position-relative">
+                    <a href="" class="">
+                        <i class="bi bi-search h5"></i>
+                        <span class="visually-hidden">Search Users</span>
+                    </a>
+                </div>
+                <div class="dropstart position-relative">
+                    <span class="dropdown-button" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell h5"></i>
+                    </span>
+                    <ul class="dropdown-menu position-absolute top-100 end-0">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+                <div class="dropstart position-relative">
+                    <span class="dropdown-button" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person h4"></i>
+                    </span>
+                    <ul class="dropdown-menu position-absolute top-100 end-0">
+                        <li>
+                            <a class="dropdown-item" href="">
+                                <i class="bi bi-person me-3 text-primary"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="m-0" />
+                            <a class="dropdown-item" href="">
+                                <i class="bi bi-gear me-3 text-primary"></i>
+                                Account Settings
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="m-0" />
+                            <a class="dropdown-item" href="">
+                                <i class="bi bi-box-arrow-right me-3 text-primary"></i>
+                                Sign Out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End Navigation items for authenticated user only -->
+            {% else %}
+            <!-- Start Navigation items for all users -->
+            <div class="d-flex gap-3 gap-lg-5 order-lg-last mx-lg-4">
+                <a href="" class="btn btn-sm btn-secondary text-light">
+                    Join
+                </a>
+                <a href="" class="btn btn-sm btn-outline-danger">
+                    Login
+                </a>
+            </div>
+            {% endif %}
+            <div class="collapse navbar-collapse me-lg-4" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-5">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#blog">Blog</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- End Navigation items for all users -->
+        </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <!-- Start Main section -->
+    <main class="mt-5">
+        <!-- Messages to be shown to authorized user. -->
+        <div class="bg-secondary col-12 d-flex align-items-center justify-content-center position-absolute message animate__animated"
+            id="messages">
+            {% for message in messages %}
+            <p class="message mt-5 p-0 text-light">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% block content %} {% endblock content %}
+    </main>
+    <!-- End Main section -->
+
+    <!-- Start Footer -->
+    <footer class="text-center text-lg-start bg-light text-muted pt-5">
+        <div class="container text-center text-md-start mt-5">
+            <div class="row mt-3">
+                <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Couch Finder</h6>
+                    <p>Where sharing knows no borders.</p>
+                </div>
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Follow Us</h6>
+                    <div class="row">
+                        <div class="col">
+                            <a href="#" class="d-block text-secondary text-decoration-none h4 mb-3"
+                                aria-label="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="#" class="d-block text-secondary text-decoration-none h4 mb-3" aria-label="Google">
+                                <i class="bi bi-google"></i>
+                            </a>
+                            <a href="#" class="d-block text-secondary text-decoration-none h4 mb-3"
+                                aria-label="Instagram">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Navigation</h6>
+                    <p>
+                        <a href="#home" class="text-reset text-decoration-none">Home</a>
+                    </p>
+                    <p>
+                        <a href="#about" class="text-reset text-decoration-none">About</a>
+                    </p>
+                    <p>
+                        <a href="#how-it-works" class="text-reset text-decoration-none">How It Works</a>
+                    </p>
+                    <p>
+                        <a href="#faq" class="text-reset text-decoration-none">FAQ</a>
+                    </p>
+                    <p>
+                        <a href="#blog" class="text-reset text-decoration-none">Blog</a>
+                    </p>
+                </div>
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                    <p>
+                        <a href="mailto:info@mail.com" class="text-reset text-decoration-none">
+                            <i class="bi bi-envelope me-3 text-secondary"></i>
+                            info@mail.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-white small text-muted">
+            &copy; 2023
+            <a class="fw-bold text-decoration-none text-muted" href="https://github.com/mika-sims?tab=repositories"
+                target="_blank" rel="noopener noreferrer">Mikail Simsek</a>
+        </div>
+    </footer>
+
+    <!-- End Footer -->
+
+    <!-- Custom navbar JS -->
+    <script src="{% static 'js/navbar.js' %}"></script>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
+</body>
+
+</html>
