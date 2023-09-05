@@ -1,0 +1,81 @@
+/* Generic styling for all screens */
+/* Font for home page subheading */
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@800&display=swap");
+
+/* Style for screens below 576px */
+/* Start Navbar section */
+.logo {
+  max-width: 5em;
+}
+
+/* Start Hero section */
+.hero-logo {
+  width: 80vw;
+}
+
+.subheading {
+  font-family: "Merienda", cursive;
+  font-size: 1em;
+}
+
+@media (min-width: 576px) {
+  /* Style for screens between 576 pixels and 767 pixels */
+  /* Start Hero section */
+  .subheading {
+    font-size: 1.5em;
+  }
+  /* End Hero section */
+}
+
+@media (min-width: 768px) {
+  /* Style for screens between 768 pixels and 991 pixels */
+  /* Start Hero section */
+  .subheading {
+    font-size: 2em;
+  }
+  /* End Hero section */
+}
+
+@media (min-width: 992px) {
+  /* Style for screens between 992 pixels and 1199 pixels */
+  /* Start Navbar section */
+  #mainNav.navbar-shrink {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #212529;
+  }
+  #mainNav.navbar-shrink .navbar-brand {
+    font-size: 1.25em;
+  }
+  #mainNav.navbar-shrink .navbar-brand svg,
+  #mainNav.navbar-shrink .navbar-brand img {
+    height: 1.5rem;
+  }
+  /* End Navbar section */
+  /* Start Hero section */
+  .hero-logo {
+    width: 55vw;
+  }
+
+  .subheading {
+    font-size: 1.5em;
+  }
+  /* End Hero section */
+}
+
+@media (min-width: 1200px) {
+  /* Style for 1200px and above screens */
+
+  /* Start Navbar section */
+  .logo {
+    max-width: 8em;
+  }
+  /* Start Hero section */
+  .hero-logo {
+    width: 45vw;
+  }
+
+  .subheading {
+    font-size: 1.5em;
+  }
+}
