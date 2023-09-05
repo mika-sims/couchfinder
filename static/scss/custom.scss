@@ -10,6 +10,11 @@ $warning: #f4a261;
 $danger: #e76f51;
 $light: #f3f8f9;
 $dark: #264653;
+// Change the color state of the navbar items
+$navbar-light-color: $secondary;
+$navbar-light-hover-color: $danger;
+$navbar-light-active-color: $danger;
+
 
 
 // Import SCSS Bootstrap
