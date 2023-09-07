@@ -56,7 +56,10 @@ INSTALLED_APPS = [
 
     # Third party apps
     'cloudinary',
-    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
     # Project apps
     'main',
 ]
@@ -70,6 +73,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Account middleware for django-allauth
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 # Project root URL configuration module
@@ -88,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `django-allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -126,6 +133,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+# Authentication backends used by the project
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 
