@@ -149,6 +149,9 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Authentication user model
+AUTH_USER_MODEL = 'authentication.User'
+
 # Site ID for the project
 SITE_ID = 1
 
