@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 
     # Project apps
     'main',
+    'authentication',
 ]
 
 # list of middleware classes that process requests and responses
