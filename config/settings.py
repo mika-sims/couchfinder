@@ -18,6 +18,7 @@ Contact Information: mikailsimsek.trb@gmail.com
 
 
 import os
+import sys
 import dj_database_url
 from pathlib import Path
 
@@ -118,6 +119,9 @@ DATABASES = {
                                   conn_health_checks=True,
                                   ),
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = DATABASES['test']
 
 
 # Password validation rules for users when creating or changing passwords
