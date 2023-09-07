@@ -7,6 +7,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls', namespace='main')),  # main app urls
+    path('accounts/', include('allauth.urls')), # django-allauth urls
 ]
 
 # Static and media files location for development
