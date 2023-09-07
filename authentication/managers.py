@@ -42,4 +42,10 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_active') is not True:
             raise ValueError('Superuser must have is_active=True.')
 
-        return self.create_user(email, first_name, last_name, password, **extra_fields)
+        email = self.normalize_email(email) 
+        user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
+        user.set_password(password)
+        # Set is_active to True by default for superusers
+        user.is_active = True
+        user.save()
+        return user
