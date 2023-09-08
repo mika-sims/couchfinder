@@ -195,7 +195,7 @@ ACCOUNT_FORMS = {
 }
 
 # Email verification configuration
-if DEBUG is True:
+if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
