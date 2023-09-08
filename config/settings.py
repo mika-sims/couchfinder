@@ -68,6 +68,10 @@ INSTALLED_APPS = [
     'authentication',
 ]
 
+# Configuration for the crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 # list of middleware classes that process requests and responses
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
