@@ -19,8 +19,6 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
         user.set_password(password)
-        # Set is_active to False by default for new users
-        user.is_active = False
         user.save()
         return user
 
@@ -45,7 +43,5 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email) 
         user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
         user.set_password(password)
-        # Set is_active to True by default for superusers
-        user.is_active = True
         user.save()
         return user
