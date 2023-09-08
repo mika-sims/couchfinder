@@ -27,12 +27,12 @@
     <!-- Start Navbar -->
     <nav class="navbar navbar-expand-lg bg-light fixed-top" id="mainNav">
         <div class="container-fluid">
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler border-0 m-0 gx-0 p-0" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
-                <i class="bi bi-list"></i>
+                <i class="bi bi-list m-0 gx-0 p-0"></i>
             </button>
-            <a class="navbar-brand" href="{% url 'main:homepage' %}">
+            <a class="navbar-brand m-0" href="{% url 'main:homepage' %}">
                 <img src="{% static 'images/logo.svg' %}" alt="logo" class="logo mt-2" />
             </a>
             {% if user.is_authenticated %}
@@ -85,17 +85,17 @@
             <!-- End Navigation items for authenticated user only -->
             {% else %}
             <!-- Start Navigation items for all users -->
-            <div class="d-flex gap-3 gap-lg-5 order-lg-last mx-lg-4">
-                <a href="{% url 'account_signup' %}" class="btn btn-sm btn-primary col-5 col-md-6 text-light">
+            <div class="d-flex order-lg-last gap-3 me-3">
+                <a href="{% url 'account_signup' %}" class="btn btn-sm btn-primary col-6 text-light">
                     Join
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-sm btn-outline-danger col-5 col-md-6">
+                <a href="{% url 'account_login' %}" class="btn btn-sm btn-outline-danger col-6">
                     Login
                 </a>
             </div>
             {% endif %}
-            <div class="collapse navbar-collapse me-lg-4" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-5">
+            <div class="collapse navbar-collapse me-lg-3" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto gap-lg-3">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#home">Home</a>
                     </li>
