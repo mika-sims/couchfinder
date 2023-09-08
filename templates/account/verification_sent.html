@@ -1,12 +1,57 @@
-{% extends "account/base.html" %}
+{% extends "base.html" %}
+{% load static %}
 
-{% load i18n %}
-
-{% block head_title %}{% trans "Verify Your Email Address" %}{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Verify Your Email Address" %}</h1>
+<section class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center main-bg"
+    id="login">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-sm-8">
+                <div class="shadow">
+                    <div class="card-body p-3 bg-light text-center">
+                        <div class="row align-items-center justify-content-lg-around">
+                            <div class="col-12 text-center">
+                                <h3 class="my-3">Please Verify Your Email Address</h3>
+                                <p>
+                                    Verify your email by clicking the link in the verification email we sent you. If you
+                                    can't find it in your main inbox, check your spam folder. Contact us if you don't
+                                    receive it within a few minutes.
+                                </p>
+                            </div>
+                        </div>
+                        <a class="btn btn-primary text-light form-group col-8 col-md-4 mb-3"
+                            href="{% url 'main:homepage' %}">Back To Home Page</a>
+                        <div class="col-12">
+                            <progress class="col-12 progress" value="0" max="5" id="progressBar"></progress>
+                            <p class="mt-3 fw-bold">
+                                Redirecting to the homepage in <span id="countdown" class="text-danger">5</span> seconds.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <p>{% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}</p>
+<script type="text/javascript">
+    // Function to redirect to the homepage after verification email is sent
+    function redirectToTargetPage() {
+        let timeLeft = 5;
+        let redirectTimer = setInterval(function () {
+            timeLeft--;
+            document.getElementById("countdown").textContent = timeLeft;
+            document.getElementById("progressBar").value = 5 - timeLeft;
+            if (timeLeft <= 0)
+                clearInterval(redirectTimer);
+        }, 1000);
+        setTimeout(function () {
+            window.location.href = '{% url "main:homepage" %}';
+        }, 5000);
+    }
+    // Call the function when the page loads
+    window.onload = redirectToTargetPage;
+</script>
 
 {% endblock %}
