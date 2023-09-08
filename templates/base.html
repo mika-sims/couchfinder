@@ -32,7 +32,7 @@
                 aria-label="Toggle navigation">
                 <i class="bi bi-list"></i>
             </button>
-            <a class="navbar-brand" href="">
+            <a class="navbar-brand" href="{% url 'main:homepage' %}">
                 <img src="{% static 'images/logo.svg' %}" alt="logo" class="logo mt-2" />
             </a>
             {% if user.is_authenticated %}
@@ -121,7 +121,7 @@
     <!-- Start Main section -->
     <main class="mt-5">
         <!-- Messages to be shown to authorized user. -->
-        <div class="bg-secondary col-12 d-flex align-items-center justify-content-center position-absolute message animate__animated"
+        <div class="bg-primary col-12 d-flex align-items-center justify-content-center position-absolute message animate__animated"
             id="messages">
             {% for message in messages %}
             <p class="message mt-5 p-0 text-light">{{ message }}</p>
