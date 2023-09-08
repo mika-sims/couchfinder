@@ -189,6 +189,11 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = False
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 
+# Override default forms for django-allauth
+ACCOUNT_FORMS = {
+    'signup': 'authentication.forms.CustomSignupForm',
+}
+
 # Default language
 LANGUAGE_CODE = 'en-us'
 
