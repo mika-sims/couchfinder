@@ -47,6 +47,10 @@
                   <div class="form-group col-12 text-start">
                     {{ form | crispy }}
                   </div>
+                  <div class="col- d-flex justify-content-end">
+                    <a class="text-danger small text-decoration-none ms-auto" href="{% url 'account_reset_password' %}">Forgot
+                      Password?</a>
+                  </div>
                   {% if redirect_field_value %}
                   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                   {% endif %}
