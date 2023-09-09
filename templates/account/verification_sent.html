@@ -15,17 +15,18 @@
                                 <h3 class="my-3">Please Verify Your Email Address</h3>
                                 <p>
                                     Verify your email by clicking the link in the verification email we sent you. If you
-                                    can't find it in your main inbox, check your spam folder. Contact us if you don't
-                                    receive it within a few minutes.
+                                    can't find it in your main inbox, check your spam folder. 
+                                    <a class="text-danger text-decoration-none" href="#">Contact us</a> 
+                                    if you don't receive it within a few minutes.
                                 </p>
                             </div>
                         </div>
                         <a class="btn btn-primary text-light form-group col-8 col-md-4 mb-3"
                             href="{% url 'main:homepage' %}">Back To Home Page</a>
                         <div class="col-12">
-                            <progress class="col-12 progress" value="0" max="5" id="progressBar"></progress>
+                            <progress class="col-12 progress" value="0" max="10" id="progressBar"></progress>
                             <p class="mt-3 fw-bold">
-                                Redirecting to the homepage in <span id="countdown" class="text-danger">5</span> seconds.
+                                Redirecting to the homepage in <span id="countdown" class="text-danger">10</span> seconds.
                             </p>
                         </div>
                     </div>
@@ -38,17 +39,17 @@
 <script type="text/javascript">
     // Function to redirect to the homepage after verification email is sent
     function redirectToTargetPage() {
-        let timeLeft = 5;
+        let timeLeft = 10;
         let redirectTimer = setInterval(function () {
             timeLeft--;
             document.getElementById("countdown").textContent = timeLeft;
-            document.getElementById("progressBar").value = 5 - timeLeft;
+            document.getElementById("progressBar").value = 10 - timeLeft;
             if (timeLeft <= 0)
                 clearInterval(redirectTimer);
         }, 1000);
         setTimeout(function () {
             window.location.href = '{% url "main:homepage" %}';
-        }, 5000);
+        }, 10000);
     }
     // Call the function when the page loads
     window.onload = redirectToTargetPage;
