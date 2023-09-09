@@ -1,46 +1,79 @@
-{% extends "account/base.html" %}
-
+{% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block title %}Couch Finder | Login{% endblock %}
 
 {% block content %}
+<section class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5 main-bg"
+  id="login">
+  <div class="container text-center">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+        <div class="shadow">
+          <div class="card-body p-3 bg-light">
+            <div class="row align-items-center justify-content-lg-around">
+              <div class="col-12">
+                <h5 class="text-center fw-bold mb-3 mx-1 mx-md-4 mt-4">Login</h5>
+                <p class="text-center">Login with your email address.</p>
+                <div class="container text-center">
+                  <p class="text-muted small">Don't have an account yet?
+                    <a href="{% url 'account_signup' %}" class="link text-decoration-none text-danger">
+                      Create one
+                    </a>
+                    instead.
+                  </p>
+                </div>
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                  {% csrf_token %}
+                  {% if form.errors %}
+                  {% for field in form %}
+                  {% for error in field.errors %}
+                  <div class="alert alert-error text-center">
+                    <p class="footnote text-danger">{{ error|escape }}</p>
+                  </div>
+                  {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                  <div class="alert alert-error text-center">
+                    <p class="footnote text-danger">{{ error|escape }}</p>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <div class="form-group col-12 text-start">
+                    {{ form | crispy }}
+                  </div>
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                  <button class="btn btn-primary text-light form-group col-12 my-3" type="submit">Login</button>
+                </form>
+                <div class="separator mb-2">OR</div>
+                <p class="text-muted text-center">
+                  Login with one of your social media accounts.
+                </p>
+                <div class="container text-center">
+                  <div class="container d-flex align-items-center justify-content-center gap-4">
+                    <a class="link text-decoration-none small" href="">
+                      <img src="{% static 'images/google-icon.svg' %}" alt="google icon" width="22">
+                    </a>
+                    <a class="link text-decoration-none small" href="">
+                      <img src="{% static 'images/facebook-icon.svg' %}" alt="facebook icon" width="22">
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<h1>{% trans "Sign In" %}</h1>
-
-{% get_providers as socialaccount_providers %}
-
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-<div class="socialaccount_ballot">
-
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
-
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-</form>
 
 {% endblock %}
