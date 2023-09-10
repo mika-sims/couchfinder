@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls', namespace='main')),  # main app urls
     path('accounts/', include('allauth.urls')), # django-allauth urls
+    path('profiles/', include('profiles.urls', namespace='profiles')) # profiles app urls
 ]
 
 # Static and media files location for development
