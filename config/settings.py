@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     # Project apps
     'main',
     'authentication',
+    'profiles',
 ]
 
 # Configuration for the crispy forms
