@@ -44,6 +44,10 @@
   background-color: #e76f51;
 }
 
+.bi-three-dots-vertical {
+  cursor: pointer;
+}
+
 /* Style for screens below 576px */
 /* Start Navbar section */
 .logo {
