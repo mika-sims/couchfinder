@@ -30,15 +30,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
-
-    def get_absolute_url(self):
-        return reverse('profiles:profile-details', kwargs={'pk': self.pk})
-
-    def get_update_url(self):
-        return reverse('profiles:profile-update', kwargs={'pk': self.pk})
-
-    def get_delete_url(self):
-        return reverse('profiles:profile-delete', kwargs={'pk': self.pk})
-
-    def get_profile_status(self):
-        return self.profile_status.replace('_', ' ').capitalize()
