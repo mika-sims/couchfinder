@@ -20,14 +20,18 @@
                                     alt="{{ profile.user.first_name }}'s Profile Image" alt=" profile picture"
                                     class="mb-4 col-12">
                                 {% else %}
-                                <img src="" alt="profile picture" class="mb-4 col-12">
+                                <img src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg" alt="profile picture" class="mb-4 col-12">
                                 {% endif %}
                                 <p class="my-1">
                                     {{ profile.user.first_name }} {{ profile.user.last_name }}
                                 </p>
                                 <p class="m-1">
                                     <i class="bi bi-geo-alt-fill me-2"></i>
-                                    {{ profile.city }}, {{ profile.region}}, {{ profile.country }} 
+                                    {% if profile.city and profile.region and profile.country %}
+                                    {{ profile.city }}, {{ profile.region}}, {{ profile.country }}
+                                    {% else %}
+                                    Not Specified
+                                    {% endif %}
                                 </p>
                                 <p class="m-0 small">Last Login: {{ profile.user.last_login|date:"F j, Y" }}
                                 </p>
