@@ -56,9 +56,9 @@
                                 <i class="bi bi-three-dots-vertical bg-light border border-danger rounded-circle d-flex align-items-center justify-content-center p-2"
                                     data-bs-toggle="dropdown"></i>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#"><i
-                                                class="bi bi-pencil-square h6 nav-icon_user-detail-page me-3 text-danger"></i> Edit
-                                            Profile</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'profiles:profile-update' user.pk %}"><i
+                                                class="bi bi-pencil-square h6 nav-icon_user-detail-page me-3 text-danger"></i> 
+                                                Edit Profile</a></li>
                                     <li><a class="dropdown-item" href=""><i
                                                 class="bi bi-key h6 nav-icon_user-detail-page me-3 text-danger"></i> Change
                                             Password</a></li>
@@ -72,34 +72,33 @@
                             <div class="tab-content pt-2">
                                 <div class="tab-pane fade show active profile-overview pt-2 mt-4" id="profile-overview">
                                     <div class="row">
-                                        <p class="fw-medium">About Me:</p>
-                                        <p class=""></p>
+                                        <p class="fw-bold text-muted small py-0 my-0">About Me:</p>
+                                        <p class="text-secondary">{{ profile.bio }}</p>
                                         <hr class="hr text-body-tertiary mx-auto">
                                     </div>
                                     <div class="row">
-                                        <p class="fw-medium">Member Since:</p>
+                                        <p class="fw-bold text-muted small py-0 my-0">Member Since:</p>
                                         <p class="text-secondary">{{ profile.user.date_joined|date:"F j, Y" }}</p>
                                         <hr class="hr text-body-tertiary mx-auto">
                                     </div>
                                     <div class="row">
-                                        <p class="fw-medium">Occupation:</p>
-                                        <p class="text-secondary"></p>
+                                        <p class="fw-bold text-muted small py-0 my-0">Occupation:</p>
+                                        <p class="text-secondary">{{ profile.occupation|title }}</p>
                                         <hr class="hr text-body-tertiary mx-auto">
                                     </div>
                                     <div class="row">
-                                        <p class="fw-medium">City:</p>
-                                        <p class="text-secondary"></p>
+                                        <p class="fw-bold text-muted small py-0 my-0">City:</p>
+                                        <p class="text-secondary">{{ profile.city.name|default:"Not specified" }}</p>
                                         <hr class="hr text-body-tertiary mx-auto">
                                     </div>
                                     <div class="row">
-                                        <p class="fw-medium">State/Region:
-                                        </p>
-                                        <p class="text-secondary"></p>
+                                        <p class="fw-bold text-muted small py-0 my-0">State/Region:</p>
+                                        <p class="text-secondary">{{ profile.region.name|default:"Not specified" }}</p>
                                         <hr class="hr text-body-tertiary mx-auto">
                                     </div>
                                     <div class="row">
-                                        <p class="fw-medium">Country:</p>
-                                        <p class="text-secondary"></p>
+                                        <p class="fw-bold text-muted small py-0 my-0">Country:</p>
+                                        <p class="text-secondary">{{ profile.country.name|default:"Not specified" }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +109,7 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             <div class="container shadow py-3 px-3 px-md-5 bg-white">
-                                <p class="nav-link text-muted" id="reviews">User Reviews</p>
+                                <p class="nav-link text-danger" id="reviews">User Reviews</p>
                                 <hr>
                                 <div class="container m-0 px-0">
                                     <div class="p-3 review bg-light">
@@ -121,7 +120,7 @@
                                             </a>
                                             <div class="d-flex flex-column align-items-center justify-content-center">
                                                 <a class="text-secondary mb-1 ms-0" href="">User</a>
-                                                <p class="d-flex flex-column align-items-start text-muted footnote m-0">
+                                                <p class="d-flex flex-column align-items-start text-danger footnote m-0">
                                                     January 12, 2020
                                                 </p>
                                             </div>
