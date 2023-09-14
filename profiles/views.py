@@ -49,7 +49,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             # If it's another user's profile, return that user's profile
             user = get_user_model().objects.get(pk=user_pk)
             return user.profile
-        
+
     def get_success_url(self):
         # Get the 'pk' parameter from the URL
         user_pk = self.kwargs.get('pk')
@@ -65,5 +65,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         print("Profile updated successfully")
         return super(ProfileUpdateView, self).form_valid(form)
 
-    
-    
+
+def upload_image(request):
+    # Upload the image and return the URL using a JSON response
+    if request.method == 'POST' and request.FILES['profile_picture']:
+        profile = request.user.profile
+        profile.image = request.FILES['profile_picture']
+        profile.save()
+        return JsonResponse({'image_url': profile.image.url})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
