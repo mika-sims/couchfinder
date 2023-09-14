@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 
 from .models import Profile
 from .forms import ProfileForm
@@ -74,3 +74,13 @@ def upload_image(request):
         profile.save()
         return JsonResponse({'image_url': profile.image.url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+class CustomPasswordChangeView(AllauthPasswordChangeView, LoginRequiredMixin):
+    """
+    Django-allauth view for changing the user's password.
+    """
+    
+    def get_success_url(self):
+        # Overrides the default success_url to redirect to the user's profile
+        return reverse('profiles:user-profile', kwargs={'pk': self.request.user.pk})
