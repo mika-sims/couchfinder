@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.http import JsonResponse
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -60,9 +61,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        profile = form.save(commit=False)
-        profile.user = self.request.user
-        profile.save()
+        form.save()
+        print("Profile updated successfully")
         return super(ProfileUpdateView, self).form_valid(form)
 
     
