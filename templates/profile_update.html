@@ -4,19 +4,20 @@
 
 
 {% block content %}
-<section class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5 main-bg">
+<section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center main-bg">
     <div class="container row d-flex flex-row justify-content-center align-items-center my-5">
         <div class="col-12 col-md-10 col-lg-6 bg-light py-5 px-3">
             <div class="text-center">
                 <h6 class="text-secondary fw-bolder my-3">Edit Your Profile</h6>
             </div>
-            <a href="{% url 'profiles:user-profile' request.user.pk %}" class="btn btn-sm btn-primary text-light text-decoration-none mb-3">
+            <a href="{% url 'profiles:user-profile' request.user.pk %}"
+                class="btn btn-sm btn-primary text-light text-decoration-none mb-3">
                 <i class="bi bi-chevron-double-left"></i>
                 Back to Profile
             </a>
             <form method="post" enctype="multipart/form-data" id="updateProfileForm">
                 {% csrf_token %}
-                <div class="form-group col-12 mb-0 position-relative text-center profile-picture_update-page-container">
+                <div class="form-group position-relative text-center profile-picture_update-page-container">
                     <img src="{{ form.instance.image.url }}" alt="profile picture"
                         class="profile-picture_update-page img-fluid mb-4">
                     <input type="file" name="profile_picture" id="id_profile_picture" class="d-none">
@@ -45,7 +46,8 @@
                     {{ form.city|as_crispy_field }}
                 </div>
                 <div class="form-group col-12 col-md-8 col-lg-6 mt-5">
-                    <button type="submit" class="btn btn-primary text-light col-5">Update</button>
+                    <input type="submit" id="image-upload-btn" class="btn btn-primary text-light col-5">
+                    <label for="image-upload-btn"></label>
                     <a href="{% url 'profiles:user-profile' request.user.pk %}" type="submit"
                         class="btn btn-danger text-light col-5">Cancel</a>
                     {% if form.errors %}
@@ -61,33 +63,52 @@
     function pictureOverlay() {
         let updateImgBtn = document.querySelector(".update-img-btn");
         let profileImgContainer = document.querySelector(".profile-picture_update-page-container");
-        let imgInput = document.querySelector("#id_profile_picture");
         let profilePicture = document.querySelector(".profile-picture_update-page");
-
-        imgInput.addEventListener("change", function (event) {
-            const selectedFile = event.target.files[0];
-            if (selectedFile) {
-                const imageURL = URL.createObjectURL(selectedFile);
-                profileImgContainer.src = imageURL;
-            }
-        });
+        let imageUploadInput = document.querySelector("#id_profile_picture");
 
         profileImgContainer.addEventListener("mouseenter", function () {
-            updateImgBtn.classList.remove("opacity-0")
-            updateImgBtn.classList.add("opacity-100")
+            updateImgBtn.classList.remove("opacity-0");
+            updateImgBtn.classList.add("opacity-100");
             updateImgBtn.style.transition = "opacity 0.3s, visibility 0s 0.3s";
-            profilePicture.style.opacity = "0.6"
+            profilePicture.style.opacity = "0.6";
             profilePicture.style.transition = "opacity 0.3s";
         });
 
         profileImgContainer.addEventListener("mouseleave", function () {
-            updateImgBtn.classList.remove("opacity-100")
-            updateImgBtn.classList.add("opacity-0")
+            updateImgBtn.classList.remove("opacity-100");
+            updateImgBtn.classList.add("opacity-0");
             updateImgBtn.style.transition = "opacity 0.3s, visibility 0s";
-            profilePicture.style.opacity = "1"
+            profilePicture.style.opacity = "1";
             profilePicture.style.transition = "opacity 0.3s, visibility 0s";
+        });
+
+        // Handle image upload using AJAX
+        imageUploadInput.addEventListener("change", function () {
+            const formData = new FormData();
+            formData.append('profile_picture', imageUploadInput.files[0]);
+
+            fetch("{% url 'profiles:upload_image' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}",
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.image_url) {
+                        // Update the image source
+                        profilePicture.src = data.image_url;
+                    } else {
+                        console.error("Image upload failed:", data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("Image upload error:", error);
+                });
         });
     }
     window.addEventListener("DOMContentLoaded", pictureOverlay);
 </script>
+
 {% endblock content %}
