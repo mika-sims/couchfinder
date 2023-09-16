@@ -1,10 +1,11 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.views.generic import View, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -129,3 +130,37 @@ class AccountDeactivateView(LoginRequiredMixin, View):
         })
         email = EmailMessage(subject, message, to=[user_email])
         email.send()
+
+
+class AccountDeactivateConfirmView(LoginRequiredMixin, View):
+    """
+    View to confirm account deactivation.
+    """
+    template_name = 'account_deactivate_confirm.html'
+    success_url = 'profiles:account-deactivate-done'
+
+    def get(self, request, uidb64, token):
+        try:
+            # Decode the UID and get the user
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = get_user_model().objects.get(pk=uid)
+
+            # Check if the token is valid
+            if default_token_generator.check_token(user, token):
+                # Deactivate the user's account
+                user.is_active = False
+                user.save()
+                
+                # Log out the user
+                logout(request)
+
+                # Redirect to the 'account_deactivated_done' page with success message
+                messages.success(request, 'Your account has been deactivated.')
+                return redirect(self.success_url)
+            else:
+                messages.error(request, 'Invalid link. Please request deactivation again.')
+                return redirect('account_login')
+
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+            messages.error(request, 'Invalid link. Please request deactivation again.')
+            return redirect('account_login')
