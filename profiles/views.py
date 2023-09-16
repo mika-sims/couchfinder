@@ -1,12 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.generic import DetailView, UpdateView
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.views.generic import View, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 
 from .models import Profile
-from .forms import ProfileForm
+from . import forms
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -35,7 +40,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     View for updating the user profile details.
     """
     model = Profile
-    form_class = ProfileForm
+    form_class = forms.ProfileForm
     template_name = 'profile_update.html'
 
     def get_object(self, queryset=None):
@@ -80,7 +85,47 @@ class CustomPasswordChangeView(AllauthPasswordChangeView, LoginRequiredMixin):
     """
     Django-allauth view for changing the user's password.
     """
-    
+
     def get_success_url(self):
         # Overrides the default success_url to redirect to the user's profile
         return reverse('profiles:user-profile', kwargs={'pk': self.request.user.pk})
+
+
+class AccountDeactivateView(LoginRequiredMixin, View):
+    """
+    View to request account deactivation.
+    """
+    template_name = 'account_deactivate.html'
+    email_subject_template = 'account/email/account_deactivation_subject.txt'
+    email_message_template = 'account/email/account_deactivation_message.txt'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # Generate a one-time use token and send an email to the user
+        user = request.user
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(str(user.pk).encode())
+
+        # Create a URL for the deactivation link
+        deactivate_url = reverse(
+            'profiles:account-deactivate-confirm', kwargs={'uidb64': uid, 'token': token})
+        deactivate_url = request.build_absolute_uri(deactivate_url)
+
+        # Send the email containing the deactivation link
+        self.send_deactivation_email(user.email, deactivate_url)
+        
+        # Return to the 'account_deactivate_mail_send' page
+        return render(request, 'account_deactivate_mail_send.html')
+
+    def send_deactivation_email(self, user_email, deactivate_url):
+        """
+        Send an email to the user with the deactivation link.
+        """
+        subject = render_to_string(self.email_subject_template)
+        message = render_to_string(self.email_message_template, {
+            'deactivate_url': deactivate_url,
+        })
+        email = EmailMessage(subject, message, to=[user_email])
+        email.send()
