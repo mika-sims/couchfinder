@@ -10,4 +10,6 @@ urlpatterns = [
     path('upload_image/', views.upload_image, name='upload_image'),
     path('account-deactivate/', views.AccountDeactivateView.as_view(),
          name='account-deactivate'),
+    path('account-deactivate-confirm/<str:uidb64>/<str:token>/',
+         views.AccountDeactivateConfirmView.as_view(), name='account-deactivate-confirm'),
 ]
