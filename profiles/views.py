@@ -164,3 +164,13 @@ class AccountDeactivateConfirmView(LoginRequiredMixin, View):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             messages.error(request, 'Invalid link. Please request deactivation again.')
             return redirect('account_login')
+
+
+class AccountDeactivateDoneView(View):
+    """
+    View to display a success message after account deactivation.
+    """
+    template_name = 'account_deactivate_done.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
