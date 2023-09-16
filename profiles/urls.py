@@ -12,4 +12,5 @@ urlpatterns = [
          name='account-deactivate'),
     path('account-deactivate-confirm/<str:uidb64>/<str:token>/',
          views.AccountDeactivateConfirmView.as_view(), name='account-deactivate-confirm'),
+    path('account-deactivate-done/', views.AccountDeactivateDoneView.as_view(), name='account-deactivate-done'),
 ]
