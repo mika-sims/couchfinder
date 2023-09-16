@@ -71,15 +71,19 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{% url 'profiles:profile-update' user.pk %}"><i
                                                 class="bi bi-pencil-square h6 nav-icon_user-detail-page me-3 text-danger"></i>
-                                            Edit Profile</a></li>
+                                            Edit Profile
+                                        </a>
+                                    </li>
                                     <li><a class="dropdown-item" href="{% url 'account_change_password' %}"><i
                                                 class="bi bi-key h6 nav-icon_user-detail-page me-3 text-danger"></i>
-                                            Change
-                                            Password</a></li>
-                                    <li><a class="dropdown-item" href="#"><i
+                                            Change Password
+                                        </a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'profiles:account-deactivate' %}"><i
                                                 class="bi bi-trash h6 nav-icon_user-detail-page me-3 text-danger"></i>
-                                            Delete
-                                            Account</a></li>
+                                            Delete Account
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             {% endif %}
@@ -130,11 +134,11 @@
                                 <div class="p-3 review bg-light">
                                     <div class="d-flex align-items-start">
                                         <a class="text-decoration-none text-secondary" href="">
-                                            <img class="rounded-circle shadow-1-strong me-3" src="" alt="avatar"
+                                            <img class="rounded-circle shadow-1-strong me-3" src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg" alt="avatar"
                                                 width="50" height="50">
                                         </a>
                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                            <a class="text-secondary mb-1 ms-0" href="">User</a>
+                                            <a class="text-secondary mb-1 ms-0" href="">Test User</a>
                                         </div>
                                     </div>
                                     <p class="my-0">
