@@ -243,3 +243,15 @@ class AccountDeactivateConfirmViewTest(TestCase):
         
         except:
             pass
+
+
+class AccountDeactivateDoneViewTest(TestCase):
+    """
+    Test that the account deactivate done view works as expected.
+    """
+
+    def test_get_method(self):
+        # When the get method is called, the account deactivate done page should be returned
+        response = self.client.get(reverse('profiles:account-deactivate-done'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account_deactivate_done.html')
