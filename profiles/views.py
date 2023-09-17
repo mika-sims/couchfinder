@@ -68,13 +68,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        print("Profile updated successfully")
         return super(ProfileUpdateView, self).form_valid(form)
 
 
 def upload_image(request):
     # Upload the image and return the URL using a JSON response
-    if request.method == 'POST' and request.FILES['profile_picture']:
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
         profile = request.user.profile
         profile.image = request.FILES['profile_picture']
         profile.save()
