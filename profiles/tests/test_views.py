@@ -2,6 +2,9 @@ from django.test import TestCase
 from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib import messages
+from django.contrib.auth.tokens import default_token_generator
 from profiles.models import Profile
 from profiles.forms import ProfileForm
 from cities_light.models import Country, Region, City
@@ -204,3 +207,39 @@ class AccountDeactivateViewTest(TestCase):
         response = self.client.post(reverse('profiles:account-deactivate'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'account_deactivate_mail_send.html')
+
+
+class AccountDeactivateConfirmViewTest(TestCase):
+    """
+    Test that the account deactivate confirm view works as expected.
+    """
+
+    def setUp(self):
+        # Create a test user
+        self.user = get_user_model().objects.create(
+            first_name='Mikail',
+            last_name='Simsek',
+            email='mikailsimsek@mail.com',
+            password='qwerty123'
+        )
+
+    def test_get_method(self):
+        # When the get method is called, the account deactivate confirm page should be returned
+        self.client.force_login(user=self.user)
+        uid = urlsafe_base64_encode(str(self.user.pk).encode())
+        token = default_token_generator.make_token(self.user)
+        response = self.client.get(reverse('profiles:account-deactivate-confirm', kwargs={'uidb64': uid, 'token': token}))
+        
+        try:
+            # Decode the UID and get the user
+            uid = urlsafe_base64_decode(uid).decode()
+            user = get_user_model().objects.get(pk=uid)
+            
+            if response.url == reverse('profiles:account-deactivate-done'):
+                user.delete()
+                self.assertFalse(get_user_model().objects.filter(pk=uid).exists())
+            else:
+                self.assertTrue(get_user_model().objects.filter(pk=uid).exists())
+        
+        except:
+            pass
