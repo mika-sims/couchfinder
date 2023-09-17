@@ -43,7 +43,7 @@ ALLOWED_HOSTS = [
 ]
 
 # Debug Mode
-DEBUG = os.environ.get('DEBUG')
+DEBUG = 'False'
 
 # Installed packages (or modules) and apps for the project
 INSTALLED_APPS = [
