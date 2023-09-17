@@ -175,3 +175,32 @@ class CustomPasswordChangeViewTest(TestCase):
         url = view.get_success_url()
         expected_url = reverse('profiles:user-profile', kwargs={'pk': self.user.pk})
         self.assertEqual(url, expected_url)
+
+
+class AccountDeactivateViewTest(TestCase):
+    """
+    Test that the account deactivate view works as expected.
+    """
+
+    def setUp(self):
+        # Create a test user
+        self.user = get_user_model().objects.create(
+            first_name='Mikail',
+            last_name='Simsek',
+            email='mikailsimsek@mail.com',
+            password='qwerty123'
+        )
+
+    def test_get_method(self):
+        # When the get method is called, the account deactivate page should be returned
+        self.client.force_login(user=self.user)
+        response = self.client.get(reverse('profiles:account-deactivate'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_method(self):
+        # When the post method is called, 
+        # the 'account_deactivate_mail_send.html' page should be returned
+        self.client.force_login(user=self.user)
+        response = self.client.post(reverse('profiles:account-deactivate'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account_deactivate_mail_send.html')
