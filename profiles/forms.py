@@ -28,3 +28,4 @@ class ProfileForm(forms.ModelForm):
         # Add placeholders
         self.fields['bio'].widget.attrs['placeholder'] = 'Tell us about yourself'
         self.fields['occupation'].widget.attrs['placeholder'] = 'Your occupation'
+        self.fields['image'].required = False
