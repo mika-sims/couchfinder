@@ -39,6 +39,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'couchfinder-5f774dee7c25.herokuapp.com'
 ]
 
 # Debug Mode
