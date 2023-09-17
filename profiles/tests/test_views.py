@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from profiles.models import Profile
@@ -6,7 +7,7 @@ from profiles.forms import ProfileForm
 from cities_light.models import Country, Region, City
 
 from profiles.models import Profile
-from profiles.views import ProfileUpdateView
+from profiles.views import ProfileUpdateView, CustomPasswordChangeView
 
 
 class ProfileDetailViewTests(TestCase):
@@ -148,3 +149,29 @@ class ProfileUpdateViewTest(TestCase):
         self.assertTrue(form.is_valid())
         response = self.client.post(self.url, form.data)
         self.assertTrue(response.status_code == 302)
+
+
+class CustomPasswordChangeViewTest(TestCase):
+    """
+    Test that the custom password change view works as expected.
+    """
+
+    def setUp(self):
+        # Create a test user
+        self.user = get_user_model().objects.create(
+            first_name='Mikail',
+            last_name='Simsek',
+            email='mikailsimsek@mail.com',
+            password='qwerty123'
+        )
+
+    def test_get_success_url_method(self):
+        # When the get_success_url method is called, the user's profile page should be returned
+        self.client.force_login(user=self.user)
+        request = RequestFactory().get(reverse('profiles:profile-update', kwargs={'pk': self.user.pk}))
+        request.user = self.user
+        view = CustomPasswordChangeView()
+        view.request = request
+        url = view.get_success_url()
+        expected_url = reverse('profiles:user-profile', kwargs={'pk': self.user.pk})
+        self.assertEqual(url, expected_url)
