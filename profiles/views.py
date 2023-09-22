@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
-from django.views.generic import View, DetailView, UpdateView
+from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 
@@ -173,3 +173,40 @@ class AccountDeactivateDoneView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class ProfileSearchView(LoginRequiredMixin, ListView):
+    model = Profile
+    template = 'profile_search.html'
+    context_object_name = 'profiles'
+    form_class = forms.ProfileForm
+    fields = ['couch_status', 'country', 'region', 'city']
+    paginate_by = 10
+
+    def get(self, request, *args, **kwargs):
+        # Initialize queryset (excluding the user's own profile)
+        queryset = Profile.objects.all().exclude(user=request.user)
+
+        # Retrieve search parameters from the AJAX request
+        first_name = request.GET.get('first_name', '')
+        last_name = request.GET.get('last_name', '')
+        couch_status = request.GET.get('couch_status', '')
+        country = request.GET.get('country', '')
+        region = request.GET.get('region', '')
+        city = request.GET.get('city', '')
+
+        # Apply filters based on the search parameters
+        if first_name:
+            queryset = queryset.filter(user__first_name__icontains=first_name)
+        if last_name:
+            queryset = queryset.filter(user__last_name__icontains=last_name)
+        if couch_status:
+            queryset = queryset.filter(couch_status=couch_status)
+        if country:
+            queryset = queryset.filter(country__name__icontains=country)
+        if region:
+            queryset = queryset.filter(region__name__icontains=region)
+        if city:
+            queryset = queryset.filter(city__name__icontains=city)
+
+        return render(request, 'profile_search.html', {'profiles': queryset})
