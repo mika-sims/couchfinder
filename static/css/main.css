@@ -48,6 +48,13 @@
   cursor: pointer;
 }
 
+.profile_search_page_image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Style for screens below 576px */
 /* Start Navbar section */
 .logo {
