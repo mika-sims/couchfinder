@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center py-5"
+    id="profile_search">
+    <div class="container">
+        <div class="row d-flex align-items-start justify-content-center gap-lg-5">
+            <div class="col-12 col-lg-4 order-1 mb-3">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2 col-12" type="search" placeholder="Search"
+                                aria-label="Search">
+                        </form>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle col-12 text-end" type="button"
+                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Couch Finder Status
+                            </button>
+                            <ul class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Busy</a></li>
+                                <li><a class="dropdown-item" href="#">Hosting</a></li>
+                                <li><a class="dropdown-item" href="#">Traveling</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 order-2">
+                {% for profile in profiles %}
+                <div class="row d-flex justify-content-center align-items-center mb-2">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body p-2">
+                                <div class="d-flex text-secondary mb-2">
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'profiles:user-profile' profile.user.pk %}">
+                                            {% if profile.image.url %}
+                                            <img class="profile_search_page_image" src="{{ profile.image.url }}" alt="">
+                                            {% else %}
+                                            <img class="profile_search_page_image"
+                                                src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
+                                                alt="Placeholder image">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start justify-content-center ms-3">
+                                        <p class="mb-1">
+                                            <a class="text-decoration-none text-secondary"
+                                                href="{% url 'profiles:user-profile' profile.user.pk %}">
+                                                {{ profile }}
+                                            </a>
+                                        </p>
+                                        <p class="mb-2 pb-1">{{ profile.couch_status|title }}</p>
+                                        <p class="mb-2 pb-1">{{ profile.location }}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex pt-1">
+                                    <button type="button" class="btn btn-sm btn-primary me-1 flex-grow-1">Add Friend</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1">Reviews</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
