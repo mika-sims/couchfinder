@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from cloudinary.models import CloudinaryField
-from cities_light.models import Country, Region, City
 from django.urls import reverse
 
 
@@ -21,12 +20,9 @@ class Profile(models.Model):
     occupation = models.CharField(max_length=250, blank=True, default='')
     couch_status = models.CharField(
         max_length=20, choices=COUCH_FINDER_STATUS_CHOICES, default='busy')
-    country = models.ForeignKey(
-        Country, on_delete=models.SET_NULL, null=True, blank=True)
-    region = models.ForeignKey(
-        Region, on_delete=models.SET_NULL, null=True, blank=True)
-    city = models.ForeignKey(
-        City, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.CharField(max_length=100, blank=True, default='')
+    region = models.CharField(max_length=100, blank=True, default='')
+    city = models.CharField(max_length=100, blank=True, default='')
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
