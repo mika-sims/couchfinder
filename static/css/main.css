@@ -71,6 +71,11 @@
   font-size: 1em;
 }
 
+
+.select2-selection__clear {
+  display: none;
+}
+
 @media (min-width: 576px) {
   /* Style for screens between 576 pixels and 767 pixels */
   /* Start Hero section */
