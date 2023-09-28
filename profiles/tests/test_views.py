@@ -1,9 +1,10 @@
+import json
 from django.test import TestCase
 from django.test import RequestFactory
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib import messages
+from django.http import JsonResponse
 from django.contrib.auth.tokens import default_token_generator
 from profiles.models import Profile
 from profiles.forms import ProfileForm
@@ -152,6 +153,55 @@ class ProfileUpdateViewTest(TestCase):
         self.assertTrue(form.is_valid())
         response = self.client.post(self.url, form.data)
         self.assertTrue(response.status_code == 302)
+
+
+class GetRegionsTest(TestCase):
+    """
+    Test that the get_regions view works as expected.
+    """
+    def setUp(self):
+        # Create sample data
+        self.country = Country.objects.create(id=1, name='Test Country')
+        self.region = Region.objects.create(id=1, name='Test Region', country=self.country)
+        self.city = City.objects.create(id=1, name='Test City', region=self.region, country=self.country)
+
+    def test_get_regions(self):
+        url = reverse('profiles:get_regions')
+
+        response = self.client.get(url, {'country_id': self.country.id})
+        data = json.loads(response.content)
+
+        self.assertIsInstance(response, JsonResponse)
+        self.assertIn('regions', data)
+        self.assertEqual(len(data['regions']), 1)
+
+        region_data = data['regions'][0]
+        self.assertEqual(region_data['id'], self.region.id)
+        self.assertEqual(region_data['name'], self.region.name)
+
+
+class GetCitiesTest(TestCase):
+    """
+    Test that the get_cities view works as expected.
+    """
+    def setUp(self):
+        # Create sample data
+        self.country = Country.objects.create(id=1, name='Test Country')
+        self.region = Region.objects.create(id=1, name='Test Region', country=self.country)
+        self.city = City.objects.create(id=1, name='Test City', region=self.region, country=self.country)
+
+    def test_get_cities(self):
+        url = reverse('profiles:get_cities')
+        response = self.client.get(url, {'region_id': self.region.id})
+        data = json.loads(response.content)
+
+        self.assertIsInstance(response, JsonResponse)
+        self.assertIn('cities', data)
+        self.assertEqual(len(data['cities']), 1)
+
+        city_data = data['cities'][0]
+        self.assertEqual(city_data['id'], self.city.id)
+        self.assertEqual(city_data['name'], self.city.name)
 
 
 class CustomPasswordChangeViewTest(TestCase):
