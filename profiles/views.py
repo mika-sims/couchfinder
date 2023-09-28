@@ -205,27 +205,4 @@ class ProfileSearchView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         # Initialize queryset (excluding the user's own profile)
         queryset = Profile.objects.all().exclude(user=request.user)
-
-        # Retrieve search parameters from the AJAX request
-        first_name = request.GET.get('first_name', '')
-        last_name = request.GET.get('last_name', '')
-        couch_status = request.GET.get('couch_status', '')
-        country = request.GET.get('country', '')
-        region = request.GET.get('region', '')
-        city = request.GET.get('city', '')
-
-        # Apply filters based on the search parameters
-        if first_name:
-            queryset = queryset.filter(user__first_name__icontains=first_name)
-        if last_name:
-            queryset = queryset.filter(user__last_name__icontains=last_name)
-        if couch_status:
-            queryset = queryset.filter(couch_status=couch_status)
-        if country:
-            queryset = queryset.filter(country__name__icontains=country)
-        if region:
-            queryset = queryset.filter(region__name__icontains=region)
-        if city:
-            queryset = queryset.filter(city__name__icontains=city)
-
         return render(request, 'profile_search.html', {'profiles': queryset})
