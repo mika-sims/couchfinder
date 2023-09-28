@@ -38,13 +38,9 @@
                                 <p class="my-1">
                                     {{ profile.user.first_name }} {{ profile.user.last_name }}
                                 </p>
-                                <p class="m-1">
-                                    <i class="bi bi-geo-alt-fill me-2"></i>
-                                    {% if profile.city and profile.region and profile.country %}
-                                    {{ profile.city }}, {{ profile.region}}, {{ profile.country }}
-                                    {% else %}
-                                    Not Specified
-                                    {% endif %}
+                                <p class="m-1 small">
+                                    <i class="bi bi-geo-alt-fill me-2 text-danger"></i>
+                                    {{ profile.get_location }}
                                 </p>
                                 <p class="m-0 small">Last Login: {{ profile.user.last_login|date:"F j, Y" }}
                                 </p>
