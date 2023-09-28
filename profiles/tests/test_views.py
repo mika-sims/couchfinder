@@ -305,3 +305,27 @@ class AccountDeactivateDoneViewTest(TestCase):
         response = self.client.get(reverse('profiles:account-deactivate-done'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'account_deactivate_done.html')
+
+
+class ProfileSearchViewTest(TestCase):
+    """
+    Test that the profile search view works as expected.
+    """
+
+    def setUp(self):
+        # Create a test user
+        self.user = get_user_model().objects.create(
+            first_name='Mikail',
+            last_name='Simsek',
+            email='mikailsimsek@mail.com',
+            password='qwerty123'
+        )
+
+    def test_get_method(self):
+        # When the get method is called, the profile search page should be returned
+        self.client.force_login(user=self.user)
+        response = self.client.get(reverse('profiles:profile-search'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile_search.html')
+
+            
