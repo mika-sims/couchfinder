@@ -1,5 +1,5 @@
 from django import forms
-
+from cities_light.models import City, Region, Country
 from profiles.models import Profile
 
 
@@ -7,6 +7,13 @@ class ProfileForm(forms.ModelForm):
     """
     Form for updating the user profile details.
     """
+
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(), required=False)
+    region = forms.ModelChoiceField(
+        queryset=Region.objects.all(), required=False)
+    city = forms.ModelChoiceField(
+        queryset=City.objects.all(), required=False)
 
     class Meta:
         """
