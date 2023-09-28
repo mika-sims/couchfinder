@@ -10,6 +10,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
+from cities_light.models import Region, City
 
 from .models import Profile
 from . import forms
@@ -69,6 +70,24 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.save()
         return super(ProfileUpdateView, self).form_valid(form)
+
+
+def get_regions(request):
+    country_id = request.GET.get('country_id')
+    regions = Region.objects.filter(country_id=country_id)
+    data = {
+        'regions': [{'id': region.id, 'name': region.name} for region in regions]
+    }
+    return JsonResponse(data)
+
+
+def get_cities(request):
+    region_id = request.GET.get('region_id')
+    cities = City.objects.filter(region_id=region_id)
+    data = {
+        'cities': [{'id': city.id, 'name': city.name} for city in cities]
+    }
+    return JsonResponse(data)
 
 
 def upload_image(request):
