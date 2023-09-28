@@ -24,3 +24,9 @@ class UserTests(TestCase):
         Test string representation.
         """
         self.assertEqual(str(self.user), 'Mikail Simsek')
+
+    def test_get_full_name_method(self):
+        """
+        Test get full name method.
+        """
+        self.assertEqual(self.user.get_full_name(), 'Mikail Simsek')
