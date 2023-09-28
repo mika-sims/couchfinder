@@ -13,6 +13,7 @@ urlpatterns = [
     path('accounts/password/change/', CustomPasswordChangeView.as_view(), name='change-password'),
     path('accounts/', include('allauth.urls')), # django-allauth urls
     path('profiles/', include('profiles.urls', namespace='profiles')), # profiles app urls
+    path('friendship/', include('friendship.urls')), # django-friendship urls
 ]
 
 # Static and media files location for development
