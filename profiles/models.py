@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from cloudinary.models import CloudinaryField
+from cities_light.models import City, Region, Country
 from django.urls import reverse
 
 
@@ -20,9 +21,23 @@ class Profile(models.Model):
     occupation = models.CharField(max_length=250, blank=True, default='')
     couch_status = models.CharField(
         max_length=20, choices=COUCH_FINDER_STATUS_CHOICES, default='busy')
-    country = models.CharField(max_length=100, blank=True, default='')
-    region = models.CharField(max_length=100, blank=True, default='')
-    city = models.CharField(max_length=100, blank=True, default='')
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
+
+    def get_location(self):
+        """
+        Return the user's location
+        """
+        location = [self.city, self.region, self.country]
+        
+        # Filter out None values
+        location = [item for item in location if item is not None]
+        
+        # Join the location values into a string
+        location = ', '.join([item.name for item in location])
+        
+        return location
