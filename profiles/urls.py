@@ -16,4 +16,5 @@ urlpatterns = [
          views.AccountDeactivateConfirmView.as_view(), name='account-deactivate-confirm'),
     path('account-deactivate-done/', views.AccountDeactivateDoneView.as_view(), name='account-deactivate-done'),
     path('profile-search/', views.ProfileSearchView.as_view(), name='profile-search'),
+    path('send-friendship-request/<int:pk>/', views.SendFriendshipRequestView.as_view(), name='send-friendship-request'),
 ]
