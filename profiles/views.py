@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, logout
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -11,6 +11,8 @@ from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 from cities_light.models import Region, City
+from friendship.models import Friend, FriendshipRequest
+from friendship.exceptions import AlreadyExistsError
 
 from .models import Profile
 from . import forms
@@ -134,7 +136,7 @@ class AccountDeactivateView(LoginRequiredMixin, View):
 
         # Send the email containing the deactivation link
         self.send_deactivation_email(user.email, deactivate_url)
-        
+
         # Return to the 'account_deactivate_mail_send' page
         return render(request, 'account_deactivate_mail_send.html')
 
@@ -168,7 +170,7 @@ class AccountDeactivateConfirmView(LoginRequiredMixin, View):
                 # Deactivate the user's account
                 user.is_active = False
                 user.save()
-                
+
                 # Log out the user
                 logout(request)
 
@@ -176,11 +178,13 @@ class AccountDeactivateConfirmView(LoginRequiredMixin, View):
                 messages.success(request, 'Your account has been deactivated.')
                 return redirect(self.success_url)
             else:
-                messages.error(request, 'Invalid link. Please request deactivation again.')
+                messages.error(
+                    request, 'Invalid link. Please request deactivation again.')
                 return redirect('account_login')
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
-            messages.error(request, 'Invalid link. Please request deactivation again.')
+            messages.error(
+                request, 'Invalid link. Please request deactivation again.')
             return redirect('account_login')
 
 
@@ -206,3 +210,28 @@ class ProfileSearchView(LoginRequiredMixin, ListView):
         # Initialize queryset (excluding the user's own profile)
         queryset = Profile.objects.all().exclude(user=request.user)
         return render(request, 'profile_search.html', {'profiles': queryset})
+
+
+class SendFriendshipRequestView(LoginRequiredMixin, View):
+    """
+    View to send a friendship request to another user.
+    """
+
+    def post(self, request, *args, **kwargs):
+        user_pk = self.kwargs.get('pk')
+        from_user = request.user
+
+        # Retrieve the user associated with the profile
+        to_user = get_user_model().objects.get(pk=user_pk)
+
+        # Check if the sender and recipient are the same user
+        if from_user == to_user:
+            messages.error(request, "You cannot send a friend request to yourself.")
+        else:
+            try:
+                Friend.objects.add_friend(from_user, to_user)
+                messages.success(request, f"Friendship request sent to {to_user}")
+            except AlreadyExistsError:
+                messages.error(request, f"Friendship request to {to_user} already exists")
+
+        return redirect('profiles:user-profile', pk=user_pk)
