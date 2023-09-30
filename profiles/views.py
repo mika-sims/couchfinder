@@ -247,3 +247,23 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
         return redirect('profiles:user-profile', pk=from_user.pk)
 
 
+class DisplayFriendshipRequestsView(LoginRequiredMixin, View):
+    """
+    View to fetch friendship requests received by the user as JSON.
+    """
+
+    def get(self, request, *args, **kwargs):
+        # Get the friendship requests received by the current user
+        friendship_requests = FriendshipRequest.objects.filter(
+            to_user=request.user)
+
+        # Return the friendship requests as JSON
+        data = {
+            'friendship_requests': [{
+                'id': request.from_user.pk,
+                'from_user': request.from_user.get_full_name()
+            }
+                for request in friendship_requests
+            ]
+        }
+        return JsonResponse(data)
