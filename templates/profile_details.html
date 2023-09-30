@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load friendshiptags %}
 {% block content %}
 
 <section class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5 main-bg"
@@ -16,14 +16,13 @@
                                     {{ profile.couch_status|title }}
                                 </p>
                                 <form method="post" enctype="multipart/form-data" id="updateProfileForm">
-                                    {% csrf_token %}
-                                    {% if profile.image %}
+                                    {% csrf_token %} {% if profile.image %}
                                     <div
                                         class="form-group position-relative text-center profile-picture_update-page-container">
                                         <img src="{{ profile.image.url }}" alt="profile picture"
-                                            class="profile-picture_update-page img-fluid mb-4">
+                                            class="profile-picture_update-page img-fluid mb-4" />
                                         <input type="file" name="profile_picture" id="id_profile_picture"
-                                            class="d-none">
+                                            class="d-none" />
                                         <label for="id_profile_picture"
                                             class="btn btn-primary text-light position-absolute top-50 start-50 translate-middle update-img-btn opacity-0">
                                             <i class="bi bi-upload me-2"></i>
@@ -32,7 +31,7 @@
                                     </div>
                                     {% else %}
                                     <img src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
-                                        alt="profile picture" class="mb-4 col-12">
+                                        alt="profile picture" class="mb-4 col-12" />
                                     {% endif %}
                                 </form>
                                 <p class="my-1">
@@ -42,18 +41,23 @@
                                     <i class="bi bi-geo-alt-fill me-2 text-danger"></i>
                                     {{ profile.get_location }}
                                 </p>
-                                <p class="m-0 small">Last Login: {{ profile.user.last_login|date:"F j, Y" }}
+                                <p class="m-0 small">
+                                    Last Login: {{ profile.user.last_login|date:"F j, Y" }}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 d-flex flex-wrap align-items-center justify-content-between mt-2">
-                        <a class="text-decoration-none btn btn-primary text-light me-3" href="">Couch Request</a>
+                        <form method="post" action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="text-decoration-none btn btn-primary text-light me-3">
+                                Add Friend
+                            </button>
+                        </form>
                         <a class="text-decoration-none btn btn-outline-secondary" href="#reviews">Reviews</a>
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-8">
                 <div class="mt-5 mt-lg-0">
                     <div class="container shadow py-3 px-3 bg-white">
@@ -65,17 +69,20 @@
                                 <i class="bi bi-three-dots-vertical bg-light border border-danger rounded-circle d-flex align-items-center justify-content-center p-2"
                                     data-bs-toggle="dropdown"></i>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'profiles:profile-update' user.pk %}"><i
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'profiles:profile-update' user.pk %}"><i
                                                 class="bi bi-pencil-square h6 nav-icon_user-detail-page me-3 text-danger"></i>
                                             Edit Profile
                                         </a>
                                     </li>
-                                    <li><a class="dropdown-item" href="{% url 'account_change_password' %}"><i
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'account_change_password' %}"><i
                                                 class="bi bi-key h6 nav-icon_user-detail-page me-3 text-danger"></i>
                                             Change Password
                                         </a>
                                     </li>
-                                    <li><a class="dropdown-item" href="{% url 'profiles:account-deactivate' %}"><i
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'profiles:account-deactivate' %}"><i
                                                 class="bi bi-trash h6 nav-icon_user-detail-page me-3 text-danger"></i>
                                             Delete Account
                                         </a>
@@ -89,31 +96,45 @@
                                     <div class="row">
                                         <p class="fw-bold text-muted small py-0 my-0">About Me:</p>
                                         <p class="text-secondary">{{ profile.bio }}</p>
-                                        <hr class="hr text-body-tertiary mx-auto">
+                                        <hr class="hr text-body-tertiary mx-auto" />
                                     </div>
                                     <div class="row">
-                                        <p class="fw-bold text-muted small py-0 my-0">Member Since:</p>
-                                        <p class="text-secondary">{{ profile.user.date_joined|date:"F j, Y" }}</p>
-                                        <hr class="hr text-body-tertiary mx-auto">
+                                        <p class="fw-bold text-muted small py-0 my-0">
+                                            Member Since:
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ profile.user.date_joined|date:"F j, Y" }}
+                                        </p>
+                                        <hr class="hr text-body-tertiary mx-auto" />
                                     </div>
                                     <div class="row">
-                                        <p class="fw-bold text-muted small py-0 my-0">Occupation:</p>
+                                        <p class="fw-bold text-muted small py-0 my-0">
+                                            Occupation:
+                                        </p>
                                         <p class="text-secondary">{{ profile.occupation|title }}</p>
-                                        <hr class="hr text-body-tertiary mx-auto">
+                                        <hr class="hr text-body-tertiary mx-auto" />
                                     </div>
                                     <div class="row">
                                         <p class="fw-bold text-muted small py-0 my-0">City:</p>
-                                        <p class="text-secondary">{{ profile.city.name|default:"Not specified" }}</p>
-                                        <hr class="hr text-body-tertiary mx-auto">
+                                        <p class="text-secondary">
+                                            {{ profile.city.name|default:"Not specified" }}
+                                        </p>
+                                        <hr class="hr text-body-tertiary mx-auto" />
                                     </div>
                                     <div class="row">
-                                        <p class="fw-bold text-muted small py-0 my-0">State/Region:</p>
-                                        <p class="text-secondary">{{ profile.region.name|default:"Not specified" }}</p>
-                                        <hr class="hr text-body-tertiary mx-auto">
+                                        <p class="fw-bold text-muted small py-0 my-0">
+                                            State/Region:
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ profile.region.name|default:"Not specified" }}
+                                        </p>
+                                        <hr class="hr text-body-tertiary mx-auto" />
                                     </div>
                                     <div class="row">
                                         <p class="fw-bold text-muted small py-0 my-0">Country:</p>
-                                        <p class="text-secondary">{{ profile.country.name|default:"Not specified" }}</p>
+                                        <p class="text-secondary">
+                                            {{ profile.country.name|default:"Not specified" }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -125,22 +146,24 @@
                     <div class="col-12">
                         <div class="container shadow py-3 px-3 px-md-5 bg-white">
                             <p class="nav-link text-danger">User Reviews</p>
-                            <hr>
+                            <hr />
                             <div class="container m-0 px-0">
                                 <div class="p-3 review bg-light">
                                     <div class="d-flex align-items-start">
                                         <a class="text-decoration-none text-secondary" href="">
-                                            <img class="rounded-circle shadow-1-strong me-3" src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg" alt="avatar"
-                                                width="50" height="50">
+                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
+                                                alt="avatar" width="50" height="50" />
                                         </a>
                                         <div class="d-flex flex-column align-items-center justify-content-center">
                                             <a class="text-secondary mb-1 ms-0" href="">Test User</a>
                                         </div>
                                     </div>
                                     <p class="my-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                        quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                        do eiusmod tempor incididunt ut labore et dolore magna
+                                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                                        ullamco laboris nisi ut aliquip consequat.
                                     </p>
                                 </div>
                                 <div class="small d-flex justify-content-between mt-2">
@@ -152,7 +175,7 @@
                                         January 12, 2020
                                     </p>
                                 </div>
-                                <hr>
+                                <hr />
                             </div>
                             <div class="card-footer py-3 border-0">
                                 <div class="d-flex w-100">
@@ -163,9 +186,12 @@
                                     </div>
                                 </div>
                                 <div class="mt-2 pt-1 ms-0 d-flex justify-content-end">
-                                    <button type="button"
-                                        class="btn btn-primary btn-sm px-3 text-light me-2">Post</button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm px-3">Cancel</button>
+                                    <button type="button" class="btn btn-primary btn-sm px-3 text-light me-2">
+                                        Post
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-3">
+                                        Cancel
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -178,7 +204,9 @@
 <script type="text/javascript">
     function pictureOverlay() {
         let updateImgBtn = document.querySelector(".update-img-btn");
-        let profileImgContainer = document.querySelector(".profile-picture_update-page-container");
+        let profileImgContainer = document.querySelector(
+            ".profile-picture_update-page-container"
+        );
         let profilePicture = document.querySelector(".profile-picture_update-page");
         let imageUploadInput = document.querySelector("#id_profile_picture");
 
@@ -201,17 +229,17 @@
         // Handle image upload using AJAX
         imageUploadInput.addEventListener("change", function () {
             const formData = new FormData();
-            formData.append('profile_picture', imageUploadInput.files[0]);
+            formData.append("profile_picture", imageUploadInput.files[0]);
 
             fetch("{% url 'profiles:upload_image' %}", {
-                method: 'POST',
+                method: "POST",
                 body: formData,
                 headers: {
-                    'X-CSRFToken': "{{ csrf_token }}",
+                    "X-CSRFToken": "{{ csrf_token }}",
                 },
             })
-                .then(response => response.json())
-                .then(data => {
+                .then((response) => response.json())
+                .then((data) => {
                     if (data.image_url) {
                         // Update the image source
                         profilePicture.src = data.image_url;
@@ -219,7 +247,7 @@
                         console.error("Image upload failed:", data.error);
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("Image upload error:", error);
                 });
         });

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load friendshiptags %}
 {% block content %}
 <section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center py-5"
     id="profile_search">
@@ -61,9 +61,14 @@
                                         <p class="mb-2 pb-1">{{ profile.location }}</p>
                                     </div>
                                 </div>
-                                <div class="d-flex pt-1">
-                                    <button type="button" class="btn btn-sm btn-primary me-1 flex-grow-1">Add Friend</button>
-                                    <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1">Reviews</button>
+                                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between mt-2">
+                                    <form method="post" action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-decoration-none btn btn-primary text-light me-3">
+                                            Add Friend
+                                        </button>
+                                    </form>
+                                    <a class="text-decoration-none btn btn-outline-secondary" href="#reviews">Reviews</a>
                                 </div>
                             </div>
                         </div>
