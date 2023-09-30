@@ -16,6 +16,12 @@ $(document).ready(function () {
         if (friendshipRequests.length === 0) {
           // If no requests, hide the notification badge
           $notificationCount.hide();
+          $notificationMenu.append(
+            $("<li>", {
+              class: "dropdown-item small",
+              text: "No new notifications",
+            })
+          );
           return;
         }
 
