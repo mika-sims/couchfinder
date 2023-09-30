@@ -38,6 +38,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             user = get_user_model().objects.get(pk=user_pk)
             return user.profile
 
+    def get(self, request, *args, **kwargs):
+        # Get the friendship requests received by the user
+        friendship_requests = FriendshipRequest.objects.filter(
+            to_user=request.user)
+        return render(request, 'profile_details.html', {'profile': self.get_object(), 'friendship_requests': friendship_requests})
+
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """
@@ -226,12 +232,18 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
 
         # Check if the sender and recipient are the same user
         if from_user == to_user:
-            messages.error(request, "You cannot send a friend request to yourself.")
+            messages.error(
+                request, "You cannot send a friend request to yourself.")
         else:
             try:
                 Friend.objects.add_friend(from_user, to_user)
-                messages.success(request, f"Friendship request sent to {to_user}")
+                messages.success(
+                    request, f"Friendship request sent to {to_user}")
             except AlreadyExistsError:
-                messages.error(request, f"Friendship request to {to_user} already exists")
+                messages.error(
+                    request, f"Friendship request to {to_user} already exists")
 
-        return redirect('profiles:user-profile', pk=user_pk)
+        # Redirect to the sender's profile instead of the recipient's profile
+        return redirect('profiles:user-profile', pk=from_user.pk)
+
+
