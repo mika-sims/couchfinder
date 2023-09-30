@@ -49,13 +49,17 @@
                 <div class="dropstart position-relative">
                     <span class="dropdown-button" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-bell h5"></i>
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger small"
+                            id="notification-count">
+                            <!-- Notification count will be updated dynamically using JavaScript -->
+                        </span>
                     </span>
-                    <ul class="dropdown-menu position-absolute top-100 end-0">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <ul class="dropdown-menu position-absolute top-100 end-0" id="notification-menu">
+                        <!-- Placeholder template for notification items -->
                     </ul>
                 </div>
+
                 <div class="dropstart position-relative">
                     <span class="dropdown-button" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-person h4"></i>
