@@ -6,7 +6,7 @@ $(document).ready(function () {
       type: "GET",
       dataType: "json",
       success: function (data) {
-        // Handle the JSON response here
+        // Handle the JSON response
         const friendshipRequests = data.friendship_requests;
         const $notificationMenu = $("#notification-menu");
         const $notificationCount = $("#notification-count");
@@ -32,7 +32,7 @@ $(document).ready(function () {
           });
 
           const notificationText = $("<span>", {
-            class: "text-danger",
+            class: "fw-bold",
             text: request.from_user,
           }).appendTo($notificationLink);
           $("<span>", {
