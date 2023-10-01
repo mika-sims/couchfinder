@@ -249,7 +249,8 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
 
 class DisplayFriendshipRequestsView(LoginRequiredMixin, View):
     """
-    View to fetch friendship requests received by the user as JSON.
+    View to fetch friendship requests received by the user as JSON
+    and display them as notifications.
     """
 
     def get(self, request, *args, **kwargs):
@@ -345,3 +346,24 @@ class FriendsListView(LoginRequiredMixin, View):
         
         return render(request, 'friends_list.html', {'friends': friends})
     
+class FriendshipRequestListView(LoginRequiredMixin, View):
+    """
+    View to display the user's friendship requests
+    in a template.
+    """
+    model = Profile
+    template_name = 'friendship_request_list.html'
+    context_object_name = 'friendship_requests'
+    paginate_by = 10
+    
+    def get(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+        
+        # Retrieve the user associated with the profile
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+        
+        # Get the user's friendship requests
+        friendship_requests = FriendshipRequest.objects.filter(to_user=user)
+        
+        return render(request, 'friendship_request_list.html', {'friendship_requests': friendship_requests})
