@@ -18,4 +18,5 @@ urlpatterns = [
     path('profile-search/', views.ProfileSearchView.as_view(), name='profile-search'),
     path('send-friendship-request/<int:pk>/', views.SendFriendshipRequestView.as_view(), name='send-friendship-request'),
     path('display-friendship-requests/', views.DisplayFriendshipRequestsView.as_view(), name='display-friendship-requests'),
+    path('accept-friendship-request/<int:pk>/', views.AcceptFriendshipRequestView.as_view(), name='accept-friendship-request'),
 ]
