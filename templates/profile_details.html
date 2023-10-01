@@ -15,6 +15,9 @@
                                 <p class="col-6 col-sm-5 col-md-6 bg-danger text-light text-center py-2 rounded">
                                     {{ profile.couch_status|title }}
                                 </p>
+                                <div class="row">
+                                    <a class="text-decoration-none" href="#reviews">Reviews</a>
+                                </div>
                                 <form method="post" enctype="multipart/form-data" id="updateProfileForm">
                                     {% csrf_token %} {% if profile.image %}
                                     <div
@@ -46,15 +49,26 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between mt-2">
-                        <form method="post" action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="text-decoration-none btn btn-primary text-light me-3">
-                                Add Friend
-                            </button>
-                        </form>
-                        <a class="text-decoration-none btn btn-outline-secondary" href="#reviews">Reviews</a>
+                        <div class="d-flex align-items-center justify-content-around">
+                            <!-- Check for pending friendship requests -->
+                            {% if friendship_requests %}
+                            <!-- iterate through friendship requests -->
+                            {% for request in friendship_requests %}
+                            <!-- Check if the request is from the profile user -->
+                            {% if request.from_user == profile.user %}
+                            <form method="post" action="{% url 'profiles:accept-friendship-request' profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">Accept</button>
+                            </form>
+                            <form method="post" action="{% url 'friendship_reject' request.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">Reject</button>
+                            </form>
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                            {% endif %}
+                        </div>                        
                     </div>
                 </div>
             </div>
