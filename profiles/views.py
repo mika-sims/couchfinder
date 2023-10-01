@@ -323,3 +323,25 @@ class RejectFriendshipRequestView(LoginRequiredMixin, View):
         # Redirect to the sender's profile instead of the recipient's profile
         return redirect('profiles:user-profile', pk=from_user.pk)
 
+
+class FriendsListView(LoginRequiredMixin, View):
+    """
+    View to display the user's friends.
+    """
+    model = Profile
+    template_name = 'friends_list.html'
+    context_object_name = 'friends'
+    paginate_by = 10
+    
+    def get(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+        
+        # Retrieve the user associated with the profile
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+        
+        # Get the user's friends
+        friends = Friend.objects.friends(user)
+        
+        return render(request, 'friends_list.html', {'friends': friends})
+    
