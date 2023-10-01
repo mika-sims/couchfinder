@@ -293,3 +293,33 @@ class AcceptFriendshipRequestView(LoginRequiredMixin, View):
         
         # Redirect to the sender's profile instead of the recipient's profile
         return redirect('profiles:user-profile', pk=from_user.pk)
+
+
+class RejectFriendshipRequestView(LoginRequiredMixin, View):
+    """
+    View to reject a friendship request.
+    """
+
+    def post(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+
+        # Retrieve the user associated with the profile
+        from_user = get_object_or_404(get_user_model(), pk=user_pk)
+
+        # Get the friendship request
+        friendship_request = FriendshipRequest.objects.get(
+            from_user=from_user, to_user=request.user)
+        
+        # Reject the friendship request
+        friendship_request.reject()
+        
+        # Delete the friendship request
+        friendship_request.delete()
+        
+        # Return a success message
+        messages.success(request, f"You rejected the friendship request from {from_user}.")
+        
+        # Redirect to the sender's profile instead of the recipient's profile
+        return redirect('profiles:user-profile', pk=from_user.pk)
+
