@@ -1,0 +1,64 @@
+<!-- Template to display current users friends -->
+{% extends "base.html" %}
+{% load static %}
+{% load friendshiptags %}
+{% block title %}Friends{% endblock %}
+{% block content %}
+<section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center py-5"
+    id="profile_search">
+    <div class="container">
+        <div class="row d-flex align-items-start justify-content-center gap-lg-5">
+            {% for friend in friends %}
+            <div class="col-12 col-lg-6 order-2">
+                <div class="row d-flex justify-content-center align-items-center mb-2">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body p-2">
+                                <div class="d-flex align-items-center text-secondary mb-2 position-relative">
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'profiles:user-profile' friend.profile.user.pk %}">
+                                            {% if friend.profile.image.url %}
+                                            <img class="profile_search_page_image" src="{{ friend.profile.image.url }}"
+                                                alt="">
+                                            {% else %}
+                                            <img class="profile_search_page_image"
+                                                src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
+                                                alt="Placeholder image">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start justify-content-center ms-3">
+                                        <p class="mb-1 small">
+                                            <a class="text-decoration-none"
+                                                href="{% url 'profiles:user-profile' friend.profile.user.pk %}">
+                                                {{ friend.profile }}
+                                            </a>
+                                        </p>
+                                        <p class="mb-2 small m-0 p-0">
+                                            {{ friend.profile.couch_status|title }}
+                                        </p>
+                                        <p class="mb-2 small m-0 p-0">
+                                            {{ friend.profile.get_location }}
+                                        </p>
+                                    </div>
+                                    <div class="position-absolute top-0 end-0">
+                                        <form action="" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                class="btn btn-sm btn-outline-danger border border-danger rounded-circle"
+                                                data-placement="top" title="Remove">
+                                                <i class="bi bi-trash" data-toggle="tooltip"></i>
+                                                <span class="visually-hidden">Delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+</section>
+{% endblock %}
