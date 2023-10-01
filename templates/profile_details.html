@@ -60,7 +60,7 @@
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-danger btn-sm px-3">Accept</button>
                             </form>
-                            <form method="post" action="{% url 'friendship_reject' request.id %}">
+                            <form method="post" action="{% url 'profiles:reject-friendship-request' profile.user.pk %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-danger btn-sm px-3">Reject</button>
                             </form>
