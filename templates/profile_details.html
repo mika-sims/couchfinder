@@ -100,12 +100,14 @@
                             {% endif %}
                             {% endif %}
 
+                            {% if request.user != profile.user %}
+                            <!-- Don't show buttons on the currently logged in users profile -->
                             {% if friends %}
                             {% for friend in friends %}
                             {% if profile.user.id != friend.id %}
                             <!-- Display whatsapp button -->
-                            <a href="https://wa.me/"
-                                class="btn btn-outline-primary btn-sm px-3 mt-3" target="_blank"  rel="noopener">
+                            <a href="https://wa.me/" class="btn btn-outline-primary btn-sm px-3 mt-3" target="_blank"
+                                rel="noopener">
                                 <i class="bi bi-whatsapp me-2"></i>
                                 Chat
                             </a>
@@ -127,6 +129,7 @@
                             </form>
                             {% endif %}
                             {% endfor %}
+                            {% endif %}
                             {% endif %}
                         </div>
                     </div>
