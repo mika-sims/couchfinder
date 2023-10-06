@@ -201,7 +201,7 @@
 
                 {% if friends %}
                 {% for friend in friends %}
-                {% if friend == profile.user %}
+                {% if friend != profile.user %}
                 <div class="row mt-5" id="reviews">
                     <div class="col-12">
                         <div class="container shadow py-3 px-3 px-md-5 bg-white">
