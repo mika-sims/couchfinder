@@ -39,10 +39,19 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             return user.profile
 
     def get(self, request, *args, **kwargs):
-        # Get the friendship requests received by the user
-        friendship_requests = FriendshipRequest.objects.filter(
-            to_user=request.user)
-        return render(request, 'profile_details.html', {'profile': self.get_object(), 'friendship_requests': friendship_requests})
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+        
+        # Retrieve the user associated with the profile
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+        
+        # Get the friendship requests for both users
+        friendship_requests = FriendshipRequest.objects.all()
+
+        # Get all friends
+        friends = Friend.objects.friends(user)
+        
+        return render(request, 'profile_details.html', {'profile': user.profile, 'friends': friends, 'friendship_requests': friendship_requests})
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -283,9 +292,12 @@ class AcceptFriendshipRequestView(LoginRequiredMixin, View):
         from_user = get_object_or_404(get_user_model(), pk=user_pk)
 
         # Get the friendship request
-        friendship_request = FriendshipRequest.objects.get(
-            from_user=from_user, to_user=request.user)
-        
+        friendship_request = get_object_or_404(
+            FriendshipRequest,
+            from_user=from_user,
+            to_user=request.user
+        )
+
         # Accept the friendship request
         friendship_request.accept()
         
@@ -319,10 +331,11 @@ class RejectFriendshipRequestView(LoginRequiredMixin, View):
         friendship_request.delete()
         
         # Return a success message
-        messages.success(request, f"You rejected the friendship request from {from_user}.")
-        
-        # Redirect to the sender's profile instead of the recipient's profile
-        return redirect('profiles:user-profile', pk=from_user.pk)
+        messages.success(
+            request, f"You rejected the friendship request from {from_user}.")
+
+        # Redirect to the user's profile
+        return redirect('profiles:user-profile', pk=request.user.pk)
 
 
 class FriendsListView(LoginRequiredMixin, View):
@@ -335,15 +348,9 @@ class FriendsListView(LoginRequiredMixin, View):
     paginate_by = 10
     
     def get(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-        
-        # Retrieve the user associated with the profile
-        user = get_object_or_404(get_user_model(), pk=user_pk)
-        
         # Get the user's friends
-        friends = Friend.objects.friends(user)
-        
+        friends = Friend.objects.friends(request.user)
+
         return render(request, 'friends_list.html', {'friends': friends})
     
 class FriendshipRequestListView(LoginRequiredMixin, View):
