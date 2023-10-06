@@ -338,6 +338,56 @@ class RejectFriendshipRequestView(LoginRequiredMixin, View):
         return redirect('profiles:user-profile', pk=request.user.pk)
 
 
+class CancelFriendshipRequestView(LoginRequiredMixin, View):
+    """
+    View to cancel a friendship request.
+    """
+
+    def post(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+
+        # Retrieve the user associated with the profile
+        to_user = get_object_or_404(get_user_model(), pk=user_pk)
+
+        # Get the friendship request
+        friendship_request = FriendshipRequest.objects.get(
+            from_user=request.user, to_user=to_user)
+
+        # Cancel the friendship request
+        friendship_request.cancel()
+
+        # Return a success message
+        messages.success(
+            request, f"You cancelled the friendship request to {to_user}.")
+
+        # Redirect to the user's profile
+        return redirect('profiles:user-profile', pk=request.user.pk)
+
+
+class RemoveFriendView(LoginRequiredMixin, View):
+    """
+    View to remove a friend.
+    """
+
+    def post(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+
+        # Retrieve the user associated with the profile
+        to_user = get_object_or_404(get_user_model(), pk=user_pk)
+
+        # Remove the friendship
+        Friend.objects.remove_friend(request.user, to_user)
+
+        # Return a success message
+        messages.success(
+            request, f"You removed {to_user} from your friends list.")
+
+        # Redirect to the user's profile
+        return redirect('profiles:user-profile', pk=request.user.pk)
+
+
 class FriendsListView(LoginRequiredMixin, View):
     """
     View to display the user's friends.
