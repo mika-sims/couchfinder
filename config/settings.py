@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Third party app. Has to be placed before 'django.contrib.staticfiles'
     'cloudinary_storage',
     'django.contrib.staticfiles',
+    'phonenumber_field',
 
     # Third party apps
     'cloudinary',
