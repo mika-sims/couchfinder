@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from cloudinary.models import CloudinaryField
 from cities_light.models import City, Region, Country
 from django.urls import reverse
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
@@ -16,6 +17,7 @@ class Profile(models.Model):
     )
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    phone_number = PhoneNumberField(blank = True)
     image = CloudinaryField('image')
     bio = models.TextField(blank=True, default='')
     occupation = models.CharField(max_length=250, blank=True, default='')
