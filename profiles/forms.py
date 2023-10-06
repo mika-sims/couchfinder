@@ -21,6 +21,7 @@ class ProfileForm(forms.ModelForm):
         """
         model = Profile
         fields = (
+            'phone_number',
             'image',
             'bio',
             'occupation',
