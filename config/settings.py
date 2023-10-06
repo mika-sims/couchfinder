@@ -121,15 +121,7 @@ DATABASES = {
                                      conn_max_age=600,
                                      conn_health_checks=True,
                                      ),
-    # Test database configuration
-    'test': dj_database_url.parse(os.environ.get('TEST_DATABASE_URL'),
-                                  conn_max_age=600,
-                                  conn_health_checks=True,
-                                  ),
 }
-
-if 'test' in sys.argv:
-    DATABASES['default'] = DATABASES['test']
 
 
 # Password validation rules for users when creating or changing passwords
