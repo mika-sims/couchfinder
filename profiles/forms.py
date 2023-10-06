@@ -34,6 +34,7 @@ class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Add placeholders
+        self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter a valid phone number (e.g. +12125552368).'
         self.fields['bio'].widget.attrs['placeholder'] = 'Tell us about yourself'
         self.fields['occupation'].widget.attrs['placeholder'] = 'Your occupation'
         self.fields['image'].required = False
