@@ -12,7 +12,7 @@
                     <div class="container bg-white py-3 px-5 border">
                         <div class="container-fluid card-body profile-card pt-2 d-flex flex-column align-items-center">
                             <div class="container d-flex flex-column justify-content-center align-items-center gap-1">
-                                <p class="col-6 col-sm-5 col-md-6 bg-danger text-light text-center py-2 rounded">
+                                <p class="col-8 col-md-5 col-lg-8 bg-danger text-light text-center py-2 rounded">
                                     {{ profile.couch_status|title }}
                                 </p>
                                 <form method="post" enctype="multipart/form-data" id="updateProfileForm">
@@ -21,13 +21,15 @@
                                         class="form-group position-relative text-center profile-picture_update-page-container">
                                         <img src="{{ profile.image.url }}" alt="profile picture"
                                             class="profile-picture_update-page img-fluid mb-4" />
+                                        {% if request.user == profile.user %}
                                         <input type="file" name="profile_picture" id="id_profile_picture"
                                             class="d-none" />
                                         <label for="id_profile_picture"
-                                            class="btn btn-primary text-light position-absolute top-50 start-50 translate-middle update-img-btn opacity-0">
+                                            class="btn btn-primary text-light col-10 position-absolute top-50 start-50 translate-middle update-img-btn opacity-0">
                                             <i class="bi bi-upload me-2"></i>
                                             Upload
                                         </label>
+                                        {% endif %}
                                     </div>
                                     {% else %}
                                     <img src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
@@ -47,23 +49,84 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-around">
-                            <!-- Check for pending friendship requests -->
+                            {% if request.user != profile.user %}
+                            {% if not friendship_requests and not friends %}
+                            <form method="post"
+                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
+                                    <i class="bi bi-person-plus-fill me-2"></i>
+                                    Add Friend
+                                </button>
+                            </form>
+                            {% endif %}
+
                             {% if friendship_requests %}
-                            <!-- iterate through friendship requests -->
-                            {% for request in friendship_requests %}
-                            <!-- Check if the request is from the profile user -->
-                            {% if request.from_user == profile.user %}
+                            {% for friendship_request in friendship_requests %}
+                            {% if friendship_request.from_user.id == profile.user.id %}
                             <form method="post" action="{% url 'profiles:accept-friendship-request' profile.user.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">Accept</button>
+                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
+                                    <i class="bi bi-person-check-fill me-2"></i>
+                                    Accept
+                                </button>
                             </form>
                             <form method="post" action="{% url 'profiles:reject-friendship-request' profile.user.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">Reject</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
+                                    <i class="bi bi-person-x-fill me-2"></i>
+                                    Reject
+                                </button>
+                            </form>
+                            {% elif friendship_request.to_user.id == profile.user.id %}
+                            <form method="post" action="{% url 'profiles:cancel-friendship-request' profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
+                                    <i class="bi bi-person-x-fill me-2"></i>
+                                    Cancel Request
+                                </button>
+                            </form>
+                            {% else %}
+                            <form method="post"
+                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
+                                    <i class="bi bi-person-plus-fill me-2"></i>
+                                    Add Friend
+                                </button>
                             </form>
                             {% endif %}
                             {% endfor %}
-                            {% else %}
+                            {% endif %}
+                            {% endif %}
+
+                            {% if friends %}
+                            {% for friend in friends %}
+                            {% if profile.user.id != friend.id %}
+                            <!-- Display whatsapp button -->
+                            <a href="https://wa.me/"
+                                class="btn btn-outline-primary btn-sm px-3 mt-3" target="_blank"  rel="noopener">
+                                <i class="bi bi-whatsapp me-2"></i>
+                                Chat
+                            </a>
+                            <form method="post" action="{% url 'profiles:remove-friend' pk=profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
+                                    <i class="bi bi-person-x-fill me-2"></i>
+                                    Remove Friend
+                                </button>
+                            </form>
+                            {% elif profile.user == friend %}
+                            <form method="post"
+                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
+                                    <i class="bi bi-person-plus-fill me-2"></i>
+                                    Add Friend
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% endfor %}
                             {% endif %}
                         </div>
                     </div>
@@ -136,6 +199,9 @@
                     </div>
                 </div>
 
+                {% if friends %}
+                {% for friend in friends %}
+                {% if friend == profile.user %}
                 <div class="row mt-5" id="reviews">
                     <div class="col-12">
                         <div class="container shadow py-3 px-3 px-md-5 bg-white">
@@ -191,6 +257,9 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
