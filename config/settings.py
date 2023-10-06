@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'authentication',
     'profiles',
     'friendship',
+    'reviews',
 ]
 
 # Configuration for the crispy forms
