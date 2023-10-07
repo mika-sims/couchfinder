@@ -42,10 +42,10 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         # Get the 'pk' parameter from the URL
         user_pk = self.kwargs.get('pk')
-        
+
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
-        
+
         # Get the friendship requests for both users
         friendship_requests = FriendshipRequest.objects.all()
 
@@ -57,6 +57,45 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
             'friends': friends,
             'friendship_requests': friendship_requests,
             'review_form': ReviewForm(),
+        })
+
+    def post(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
+        user_pk = self.kwargs.get('pk')
+
+        # Retrieve the user associated with the profile
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+
+        # Get the friendship requests for both users
+        friendship_requests = FriendshipRequest.objects.all()
+
+        # Get all friends
+        friends = Friend.objects.friends(user)
+
+        # Get the review form
+        review_form = ReviewForm(request.POST)
+
+        if review_form.is_valid():
+            # Create the review object but don't save it yet
+            review = review_form.save(commit=False)
+
+            # Assign the current user to the review
+            review.user = request.user
+
+            # Assign the review to the profile
+            review.profile = user.profile
+
+            # Save the review to the database
+            review.save()
+        else:
+            review_form = ReviewForm()
+
+
+        return render(request, 'profile_details.html', {
+            'profile': user.profile,
+            'friends': friends,
+            'friendship_requests': friendship_requests,
+            'review_form': review_form,
         })
 
 
@@ -306,10 +345,10 @@ class AcceptFriendshipRequestView(LoginRequiredMixin, View):
 
         # Accept the friendship request
         friendship_request.accept()
-        
+
         # Return a success message
         messages.success(request, f"You are now friends with {from_user}.")
-        
+
         # Redirect to the sender's profile instead of the recipient's profile
         return redirect('profiles:user-profile', pk=from_user.pk)
 
@@ -329,13 +368,13 @@ class RejectFriendshipRequestView(LoginRequiredMixin, View):
         # Get the friendship request
         friendship_request = FriendshipRequest.objects.get(
             from_user=from_user, to_user=request.user)
-        
+
         # Reject the friendship request
         friendship_request.reject()
-        
+
         # Delete the friendship request
         friendship_request.delete()
-        
+
         # Return a success message
         messages.success(
             request, f"You rejected the friendship request from {from_user}.")
@@ -402,13 +441,14 @@ class FriendsListView(LoginRequiredMixin, View):
     template_name = 'friends_list.html'
     context_object_name = 'friends'
     paginate_by = 10
-    
+
     def get(self, request, *args, **kwargs):
         # Get the user's friends
         friends = Friend.objects.friends(request.user)
 
         return render(request, 'friends_list.html', {'friends': friends})
-    
+
+
 class FriendshipRequestListView(LoginRequiredMixin, View):
     """
     View to display the user's friendship requests
@@ -418,15 +458,15 @@ class FriendshipRequestListView(LoginRequiredMixin, View):
     template_name = 'friendship_request_list.html'
     context_object_name = 'friendship_requests'
     paginate_by = 10
-    
+
     def get(self, request, *args, **kwargs):
         # Get the 'pk' parameter from the URL
         user_pk = self.kwargs.get('pk')
-        
+
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
-        
+
         # Get the user's friendship requests
         friendship_requests = FriendshipRequest.objects.filter(to_user=user)
-        
+
         return render(request, 'friendship_request_list.html', {'friendship_requests': friendship_requests})
