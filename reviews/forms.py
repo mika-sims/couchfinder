@@ -10,6 +10,10 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ('content',)
         widgets = {
-            'content': forms.Textarea(
-                attrs={'rows': 3, 'placeholder': 'Write your review here...'}),
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your review here...'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].required = False
+        self.fields['content'].label = 'Write a review'
