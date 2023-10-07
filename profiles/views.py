@@ -17,6 +17,7 @@ from friendship.exceptions import AlreadyExistsError
 from .models import Profile
 from . import forms
 from reviews.forms import ReviewForm
+from reviews.models import Review
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -51,12 +52,16 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         # Get all friends
         friends = Friend.objects.friends(user)
+        
+        # Get the reviews
+        reviews = Review.objects.filter(user=user)
 
         return render(request, 'profile_details.html', {
             'profile': user.profile,
             'friends': friends,
             'friendship_requests': friendship_requests,
             'review_form': ReviewForm(),
+            'reviews': reviews,
         })
 
     def post(self, request, *args, **kwargs):
