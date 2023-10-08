@@ -1,44 +1,51 @@
 {% extends "base.html" %}
 {% load static %}
-{% load friendshiptags %}
+{% load crispy_forms_tags %}
+
+
 {% block content %}
 <section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center py-5"
     id="profile_search">
     <div class="container">
         <div class="row d-flex align-items-start justify-content-center gap-lg-5">
             <div class="col-12 col-lg-4 order-1 mb-3">
+                <h5 class="text-secondary">
+                    Search User
+                </h5>
+                <hr>
                 <div class="row">
                     <div class="col-12 mb-2">
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2 col-12" type="search" placeholder="Search"
-                                aria-label="Search">
+                        <form method="get">
+                            <div class="form-group col-12 mb-0">
+                                {{ form.couch_status|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-12 mb-0">
+                                {{ form.country|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-12 mb-0">
+                                {{ form.region|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-12 mb-0">
+                                {{ form.city|as_crispy_field }}
+                            </div>
+
+                            <div class="form-group col-12 mb-0">
+                                <button class="btn btn-outline-secondary col-12" type="submit">Search</button>
+                            </div>
                         </form>
-                    </div>
-                    <div class="col-12 mb-2">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle col-12 text-end" type="button"
-                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Couch Finder Status
-                            </button>
-                            <ul class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Busy</a></li>
-                                <li><a class="dropdown-item" href="#">Hosting</a></li>
-                                <li><a class="dropdown-item" href="#">Traveling</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn btn-outline-secondary" type="submit">Search</button>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-6 order-2">
+                <h5 class="text-secondary">
+                    Search Results
+                </h5>
                 {% for profile in profiles %}
                 <div class="row d-flex justify-content-center align-items-center mb-2">
                     <div class="col">
                         <div class="card">
                             <div class="card-body p-2">
-                                <div class="d-flex text-secondary mb-2">
+                                <div class="d-flex align-items-center justify-content-start text-secondary mb-2">
                                     <div class="flex-shrink-0">
                                         <a href="{% url 'profiles:user-profile' profile.user.pk %}">
                                             {% if profile.image.url %}
@@ -50,7 +57,7 @@
                                             {% endif %}
                                         </a>
                                     </div>
-                                    <div class="d-flex flex-column align-items-start justify-content-center ms-3">
+                                    <div class="d-flex flex-column align-items-start justify-content-center ms-5">
                                         <p class="mb-1">
                                             <a class="text-decoration-none text-secondary"
                                                 href="{% url 'profiles:user-profile' profile.user.pk %}">
@@ -58,17 +65,24 @@
                                             </a>
                                         </p>
                                         <p class="mb-2 pb-1">{{ profile.couch_status|title }}</p>
-                                        <p class="mb-2 pb-1">{{ profile.location }}</p>
+                                        <p class="small">
+                                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                                            {{ profile.get_location|default:"Not specified" }}
+                                        </p>
+                                        <div class="col-12 d-flex flex-wrap align-items-center justify-content-start mt-3">
+                                            <form method="post" action="{% url 'profiles:user-profile' profile.user.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                    class="text-decoration-none btn btn-primary text-light me-3">
+                                                    Details
+                                                </button>
+                                            </form>
+                                            <a class="text-decoration-none btn btn-outline-danger"
+                                                href="{% url 'profiles:user-profile' profile.user.pk %}#reviews">
+                                                Reviews
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 d-flex flex-wrap align-items-center justify-content-start mt-3">
-                                    <form method="post" action="{% url 'profiles:user-profile' profile.user.pk %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="text-decoration-none btn btn-primary text-light me-3">
-                                            Details
-                                        </button>
-                                    </form>
-                                    <a class="text-decoration-none btn btn-outline-secondary" href="{% url 'profiles:user-profile' profile.user.pk %}#reviews">Reviews</a>
                                 </div>
                             </div>
                         </div>
