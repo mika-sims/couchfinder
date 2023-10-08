@@ -26,6 +26,10 @@ class Profile(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
+    
+    class Meta:
+        # Order by the user's first name
+        ordering = ['user__first_name']
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
