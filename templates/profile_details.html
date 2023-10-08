@@ -42,7 +42,7 @@
                                 </p>
                                 <p class="m-1 small">
                                     <i class="bi bi-geo-alt-fill me-2 text-danger"></i>
-                                    {{ profile.get_location }}
+                                    {{ profile.get_location|default:"Not specified" }}
                                 </p>
                                 <p class="m-0 small">
                                     Last Login: {{ profile.user.last_login|date:"F j, Y" }}
