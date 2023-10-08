@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from profiles.models import Profile
 
 
 class Review(models.Model):
@@ -7,6 +8,7 @@ class Review(models.Model):
     Model for storing user reviews
     """
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, default=1)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
