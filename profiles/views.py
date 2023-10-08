@@ -278,18 +278,38 @@ class AccountDeactivateDoneView(View):
         return render(request, self.template_name)
 
 
-class ProfileSearchView(LoginRequiredMixin, ListView):
-    model = Profile
-    template = 'profile_search.html'
-    context_object_name = 'profiles'
-    form_class = forms.ProfileForm
-    fields = ['couch_status', 'country', 'region', 'city']
-    paginate_by = 10
+class ProfileSearchView(View):
+    template_name = 'profile_search.html'
 
-    def get(self, request, *args, **kwargs):
-        # Initialize queryset (excluding the user's own profile)
-        queryset = Profile.objects.all().exclude(user=request.user)
-        return render(request, 'profile_search.html', {'profiles': queryset})
+    def get(self, request):
+        form = forms.ProfileForm(request.GET)
+        profiles = Profile.objects.all().exclude(user=request.user)
+
+        if form.is_valid():
+            couch_status = form.cleaned_data.get('couch_status')
+            country = form.cleaned_data.get('country')
+            region = form.cleaned_data.get('region')
+            city = form.cleaned_data.get('city')
+
+            if couch_status:
+                profiles = profiles.filter(couch_status=couch_status)
+            if country:
+                profiles = profiles.filter(country=country)
+            if region:
+                profiles = profiles.filter(region=region)
+            if city:
+                profiles = profiles.filter(city=city)
+        else:
+            form = forms.ProfileForm()
+            # Display message if no profiles were found
+            messages.error(request, 'No profiles found.')
+
+        context = {
+            'form': form,
+            'profiles': profiles,
+        }
+
+        return render(request, self.template_name, context)
 
 
 class SendFriendshipRequestView(LoginRequiredMixin, View):
