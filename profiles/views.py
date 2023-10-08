@@ -47,14 +47,29 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
 
-        # Get the friendship requests for both users
-        friendship_requests = FriendshipRequest.objects.all()
+        # Get all unread friendship requests
+        try:
+            friendship_requests = friendship_requests = FriendshipRequest.objects.filter(rejected__isnull=True)
+        except FriendshipRequest.DoesNotExist:
+            friendship_requests = None
 
-        # Get all friends
-        friends = Friend.objects.friends(user)
+        # Get all friends for both users
+        try:
+            if request.user:
+                friends = Friend.objects.friends(request.user)
+            else:
+                friends = Friend.objects.friends(user)
+        except Friend.DoesNotExist:
+            friends = None
         
         # Get the reviews
-        reviews = Review.objects.filter(user=user)
+        try:
+            if user == request.user:
+                reviews = Review.objects.filter(profile=request.user.profile)
+            else:
+                reviews = Review.objects.filter(profile=user.profile)
+        except Review.DoesNotExist:
+            reviews = None
 
         return render(request, 'profile_details.html', {
             'profile': user.profile,
@@ -283,11 +298,13 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
     """
 
     def post(self, request, *args, **kwargs):
+        # Get the 'pk' parameter from the URL
         user_pk = self.kwargs.get('pk')
+        # Retrieve the user associated with the account
         from_user = request.user
 
         # Retrieve the user associated with the profile
-        to_user = get_user_model().objects.get(pk=user_pk)
+        to_user = get_object_or_404(get_user_model(), pk=user_pk)
 
         # Check if the sender and recipient are the same user
         if from_user == to_user:
@@ -295,7 +312,7 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
                 request, "You cannot send a friend request to yourself.")
         else:
             try:
-                Friend.objects.add_friend(from_user, to_user)
+                Friend.objects.add_friend(from_user=from_user, to_user=to_user)
                 messages.success(
                     request, f"Friendship request sent to {to_user}")
             except AlreadyExistsError:
@@ -303,7 +320,7 @@ class SendFriendshipRequestView(LoginRequiredMixin, View):
                     request, f"Friendship request to {to_user} already exists")
 
         # Redirect to the sender's profile instead of the recipient's profile
-        return redirect('profiles:user-profile', pk=from_user.pk)
+        return redirect('profiles:user-profile', pk=to_user.pk)
 
 
 class DisplayFriendshipRequestsView(LoginRequiredMixin, View):
@@ -338,7 +355,7 @@ class AcceptFriendshipRequestView(LoginRequiredMixin, View):
         # Get the 'pk' parameter from the URL
         user_pk = self.kwargs.get('pk')
 
-        # Retrieve the user associated with the profile
+        # Retrieve the user who sent the friendship request (profile owner)
         from_user = get_object_or_404(get_user_model(), pk=user_pk)
 
         # Get the friendship request
@@ -385,7 +402,7 @@ class RejectFriendshipRequestView(LoginRequiredMixin, View):
             request, f"You rejected the friendship request from {from_user}.")
 
         # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=request.user.pk)
+        return redirect('profiles:user-profile', pk=from_user.pk)
 
 
 class CancelFriendshipRequestView(LoginRequiredMixin, View):
@@ -412,7 +429,7 @@ class CancelFriendshipRequestView(LoginRequiredMixin, View):
             request, f"You cancelled the friendship request to {to_user}.")
 
         # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=request.user.pk)
+        return redirect('profiles:user-profile', pk=to_user.pk)
 
 
 class RemoveFriendView(LoginRequiredMixin, View):
@@ -435,7 +452,7 @@ class RemoveFriendView(LoginRequiredMixin, View):
             request, f"You removed {to_user} from your friends list.")
 
         # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=request.user.pk)
+        return redirect('profiles:user-profile', pk=to_user.pk)
 
 
 class FriendsListView(LoginRequiredMixin, View):
@@ -448,8 +465,14 @@ class FriendsListView(LoginRequiredMixin, View):
     paginate_by = 10
 
     def get(self, request, *args, **kwargs):
+        # Get the pk parameter from the URL
+        user_pk = self.kwargs.get('pk')
+        
+        # Retrieve the user associated with the profile
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+        
         # Get the user's friends
-        friends = Friend.objects.friends(request.user)
+        friends = Friend.objects.friends(user)
 
         return render(request, 'friends_list.html', {'friends': friends})
 
