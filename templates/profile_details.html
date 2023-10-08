@@ -50,17 +50,6 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-around">
-                            {% if request.user != profile.user %}
-                            {% if not friendship_requests and not friends %}
-                            <form method="post"
-                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
-                                    <i class="bi bi-person-plus-fill me-2"></i>
-                                    Add Friend
-                                </button>
-                            </form>
-                            {% endif %}
 
                             {% if friendship_requests %}
                             {% for friendship_request in friendship_requests %}
@@ -79,7 +68,7 @@
                                     Reject
                                 </button>
                             </form>
-                            {% elif friendship_request.to_user.id == profile.user.id %}
+                            {% elif friendship_request.to_user.id == profile.user.id and friendship_request.to_user.id not in friends %}
                             <form method="post" action="{% url 'profiles:cancel-friendship-request' profile.user.pk %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
@@ -87,25 +76,13 @@
                                     Cancel Request
                                 </button>
                             </form>
-                            {% else %}
-                            <form method="post"
-                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
-                                    <i class="bi bi-person-plus-fill me-2"></i>
-                                    Add Friend
-                                </button>
-                            </form>
                             {% endif %}
                             {% endfor %}
                             {% endif %}
-                            {% endif %}
 
-                            {% if request.user != profile.user %}
-                            <!-- Don't show buttons on the currently logged in users profile -->
                             {% if friends %}
                             {% for friend in friends %}
-                            {% if profile.user.id != friend.id %}
+                            {% if friend.id == profile.user.id %}
                             <!-- Display whatsapp button -->
                             <a href="https://wa.me/{{profile.phone_number}}" class="btn btn-outline-primary btn-sm px-3 mt-3" target="_blank"
                                 rel="noopener">
@@ -119,9 +96,9 @@
                                     Remove Friend
                                 </button>
                             </form>
-                            {% elif profile.user == friend %}
-                            <form method="post"
-                                action="{% url 'profiles:send-friendship-request' pk=profile.user.pk %}">
+                            {% else %}
+                            <!-- Add friend -->
+                            <form method="post" action="">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
                                     <i class="bi bi-person-plus-fill me-2"></i>
@@ -130,7 +107,6 @@
                             </form>
                             {% endif %}
                             {% endfor %}
-                            {% endif %}
                             {% endif %}
                         </div>
                     </div>
