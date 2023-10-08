@@ -37,4 +37,6 @@ class ProfileForm(forms.ModelForm):
         self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter a valid phone number (e.g. +12125552368).'
         self.fields['bio'].widget.attrs['placeholder'] = 'Tell us about yourself'
         self.fields['occupation'].widget.attrs['placeholder'] = 'Your occupation'
-        self.fields['image'].required = False
+        # Remove required attribute from all fields
+        for field in self.fields:
+            self.fields[field].required = False
