@@ -11,8 +11,6 @@ from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 from cities_light.models import Region, City
-from friendship.models import Friend, FriendshipRequest
-from friendship.exceptions import AlreadyExistsError
 
 from .models import Profile
 from . import forms
@@ -47,21 +45,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
 
-        # Get all unread friendship requests
-        try:
-            friendship_requests = friendship_requests = FriendshipRequest.objects.filter(rejected__isnull=True)
-        except FriendshipRequest.DoesNotExist:
-            friendship_requests = None
-
-        # Get all friends for both users
-        try:
-            if request.user:
-                friends = Friend.objects.friends(request.user)
-            else:
-                friends = Friend.objects.friends(user)
-        except Friend.DoesNotExist:
-            friends = None
-        
         # Get the reviews
         try:
             if user == request.user:
@@ -73,8 +56,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         return render(request, 'profile_details.html', {
             'profile': user.profile,
-            'friends': friends,
-            'friendship_requests': friendship_requests,
             'review_form': ReviewForm(),
             'reviews': reviews,
         })
@@ -85,12 +66,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Get the friendship requests for both users
-        friendship_requests = FriendshipRequest.objects.all()
-
-        # Get all friends
-        friends = Friend.objects.friends(user)
 
         # Get the review form
         review_form = ReviewForm(request.POST)
@@ -110,11 +85,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         else:
             review_form = ReviewForm()
 
-
         return render(request, 'profile_details.html', {
             'profile': user.profile,
-            'friends': friends,
-            'friendship_requests': friendship_requests,
             'review_form': review_form,
         })
 
@@ -310,211 +282,3 @@ class ProfileSearchView(View):
         }
 
         return render(request, self.template_name, context)
-
-
-class SendFriendshipRequestView(LoginRequiredMixin, View):
-    """
-    View to send a friendship request to another user.
-    """
-
-    def post(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-        # Retrieve the user associated with the account
-        from_user = request.user
-
-        # Retrieve the user associated with the profile
-        to_user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Check if the sender and recipient are the same user
-        if from_user == to_user:
-            messages.error(
-                request, "You cannot send a friend request to yourself.")
-        else:
-            try:
-                Friend.objects.add_friend(from_user=from_user, to_user=to_user)
-                messages.success(
-                    request, f"Friendship request sent to {to_user}")
-            except AlreadyExistsError:
-                messages.error(
-                    request, f"Friendship request to {to_user} already exists")
-
-        # Redirect to the sender's profile instead of the recipient's profile
-        return redirect('profiles:user-profile', pk=to_user.pk)
-
-
-class DisplayFriendshipRequestsView(LoginRequiredMixin, View):
-    """
-    View to fetch friendship requests received by the user as JSON
-    and display them as notifications.
-    """
-
-    def get(self, request, *args, **kwargs):
-        # Get the friendship requests received by the current user
-        friendship_requests = FriendshipRequest.objects.filter(
-            to_user=request.user)
-
-        # Return the friendship requests as JSON
-        data = {
-            'friendship_requests': [{
-                'id': request.from_user.pk,
-                'from_user': request.from_user.get_full_name()
-            }
-                for request in friendship_requests
-            ]
-        }
-        return JsonResponse(data)
-
-
-class AcceptFriendshipRequestView(LoginRequiredMixin, View):
-    """
-    View to accept a friendship request.
-    """
-
-    def post(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-
-        # Retrieve the user who sent the friendship request (profile owner)
-        from_user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Get the friendship request
-        friendship_request = get_object_or_404(
-            FriendshipRequest,
-            from_user=from_user,
-            to_user=request.user
-        )
-
-        # Accept the friendship request
-        friendship_request.accept()
-
-        # Return a success message
-        messages.success(request, f"You are now friends with {from_user}.")
-
-        # Redirect to the sender's profile instead of the recipient's profile
-        return redirect('profiles:user-profile', pk=from_user.pk)
-
-
-class RejectFriendshipRequestView(LoginRequiredMixin, View):
-    """
-    View to reject a friendship request.
-    """
-
-    def post(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-
-        # Retrieve the user associated with the profile
-        from_user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Get the friendship request
-        friendship_request = FriendshipRequest.objects.get(
-            from_user=from_user, to_user=request.user)
-
-        # Reject the friendship request
-        friendship_request.reject()
-
-        # Delete the friendship request
-        friendship_request.delete()
-
-        # Return a success message
-        messages.success(
-            request, f"You rejected the friendship request from {from_user}.")
-
-        # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=from_user.pk)
-
-
-class CancelFriendshipRequestView(LoginRequiredMixin, View):
-    """
-    View to cancel a friendship request.
-    """
-
-    def post(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-
-        # Retrieve the user associated with the profile
-        to_user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Get the friendship request
-        friendship_request = FriendshipRequest.objects.get(
-            from_user=request.user, to_user=to_user)
-
-        # Cancel the friendship request
-        friendship_request.cancel()
-
-        # Return a success message
-        messages.success(
-            request, f"You cancelled the friendship request to {to_user}.")
-
-        # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=to_user.pk)
-
-
-class RemoveFriendView(LoginRequiredMixin, View):
-    """
-    View to remove a friend.
-    """
-
-    def post(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-
-        # Retrieve the user associated with the profile
-        to_user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Remove the friendship
-        Friend.objects.remove_friend(request.user, to_user)
-
-        # Return a success message
-        messages.success(
-            request, f"You removed {to_user} from your friends list.")
-
-        # Redirect to the user's profile
-        return redirect('profiles:user-profile', pk=to_user.pk)
-
-
-class FriendsListView(LoginRequiredMixin, View):
-    """
-    View to display the user's friends.
-    """
-    model = Profile
-    template_name = 'friends_list.html'
-    context_object_name = 'friends'
-    paginate_by = 10
-
-    def get(self, request, *args, **kwargs):
-        # Get the pk parameter from the URL
-        user_pk = self.kwargs.get('pk')
-        
-        # Retrieve the user associated with the profile
-        user = get_object_or_404(get_user_model(), pk=user_pk)
-        
-        # Get the user's friends
-        friends = Friend.objects.friends(user)
-
-        return render(request, 'friends_list.html', {'friends': friends})
-
-
-class FriendshipRequestListView(LoginRequiredMixin, View):
-    """
-    View to display the user's friendship requests
-    in a template.
-    """
-    model = Profile
-    template_name = 'friendship_request_list.html'
-    context_object_name = 'friendship_requests'
-    paginate_by = 10
-
-    def get(self, request, *args, **kwargs):
-        # Get the 'pk' parameter from the URL
-        user_pk = self.kwargs.get('pk')
-
-        # Retrieve the user associated with the profile
-        user = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Get the user's friendship requests
-        friendship_requests = FriendshipRequest.objects.filter(to_user=user)
-
-        return render(request, 'friendship_request_list.html', {'friendship_requests': friendship_requests})

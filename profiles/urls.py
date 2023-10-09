@@ -16,12 +16,4 @@ urlpatterns = [
          views.AccountDeactivateConfirmView.as_view(), name='account-deactivate-confirm'),
     path('account-deactivate-done/', views.AccountDeactivateDoneView.as_view(), name='account-deactivate-done'),
     path('profile-search/', views.ProfileSearchView.as_view(), name='profile-search'),
-    path('send-friendship-request/<int:pk>/', views.SendFriendshipRequestView.as_view(), name='send-friendship-request'),
-    path('display-friendship-requests/', views.DisplayFriendshipRequestsView.as_view(), name='display-friendship-requests'),
-    path('accept-friendship-request/<int:pk>/', views.AcceptFriendshipRequestView.as_view(), name='accept-friendship-request'),
-    path('reject-friendship-request/<int:pk>/', views.RejectFriendshipRequestView.as_view(), name='reject-friendship-request'),
-    path('cancel-friendship-request/<int:pk>/', views.CancelFriendshipRequestView.as_view(), name='cancel-friendship-request'),
-    path('remove-friend/<int:pk>/', views.RemoveFriendView.as_view(), name='remove-friend'),
-    path('frineds-list/<int:pk>', views.FriendsListView.as_view(), name='friends-list'),
-    path('friendship-request-list/<int:pk>', views.FriendshipRequestListView.as_view(), name='friendship-request-list'),
 ]

@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'main',
     'authentication',
     'profiles',
-    'friendship',
     'reviews',
 ]
 

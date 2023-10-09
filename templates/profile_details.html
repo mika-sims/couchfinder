@@ -47,67 +47,14 @@
                                 <p class="m-0 small">
                                     Last Login: {{ profile.user.last_login|date:"F j, Y" }}
                                 </p>
+                                <!-- Add link to whatsapp -->
+                                <a href="https://wa.me/{{ profile.phone_number }}"
+                                    class="text-decoration-none btn btn-primary text-light" target="_blank" rel="noopener">
+                                        <i class="bi bi-whatsapp me-2"></i>
+                                        {{ profile.phone_number }}
+                                    Send Message
+                                </a>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-around">
-
-                            {% if friendship_requests %}
-                            {% for friendship_request in friendship_requests %}
-                            {% if friendship_request.from_user.id == profile.user.id %}
-                            <form method="post" action="{% url 'profiles:accept-friendship-request' profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
-                                    <i class="bi bi-person-check-fill me-2"></i>
-                                    Accept
-                                </button>
-                            </form>
-                            <form method="post" action="{% url 'profiles:reject-friendship-request' profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
-                                    <i class="bi bi-person-x-fill me-2"></i>
-                                    Reject
-                                </button>
-                            </form>
-                            {% elif friendship_request.to_user.id == profile.user.id and friendship_request.to_user.id not in friends %}
-                            <form method="post" action="{% url 'profiles:cancel-friendship-request' profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
-                                    <i class="bi bi-person-x-fill me-2"></i>
-                                    Cancel Request
-                                </button>
-                            </form>
-                            {% endif %}
-                            {% endfor %}
-                            {% endif %}
-
-                            {% if friends %}
-                            {% for friend in friends %}
-                            {% if friend.id == profile.user.id %}
-                            <!-- Display whatsapp button -->
-                            <a href="https://wa.me/{{profile.phone_number}}" class="btn btn-outline-primary btn-sm px-3 mt-3" target="_blank"
-                                rel="noopener">
-                                <i class="bi bi-whatsapp me-2"></i>
-                                Chat
-                            </a>
-                            <form method="post" action="{% url 'profiles:remove-friend' pk=profile.user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-3">
-                                    <i class="bi bi-person-x-fill me-2"></i>
-                                    Remove Friend
-                                </button>
-                            </form>
-                            {% else %}
-                            <!-- Add friend -->
-                            <form method="post" action="">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary btn-sm px-3 mt-3 text-light">
-                                    <i class="bi bi-person-plus-fill me-2"></i>
-                                    Add Friend
-                                </button>
-                            </form>
-                            {% endif %}
-                            {% endfor %}
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -117,11 +64,6 @@
                     <div class="container shadow py-3 px-3 bg-white">
                         <div class="card-body">
                             <div class="d-flex align-items-center justify-content-between">
-                                <a class="text-decoration-none"
-                                    href="{% url 'profiles:friends-list' profile.user.pk %}">
-                                    <i class="bi bi-people-fill"></i>
-                                    Friends
-                                </a>
                                 <a class="text-decoration-none" href="#reviews">
                                     Reviews
                                     <i class="bi bi-hand-thumbs-up-fill"></i>
@@ -179,9 +121,6 @@
                     </div>
                 </div>
 
-                {% if friends %}
-                {% for friend in friends %}
-                {% if friend != profile.user %}
                 <div class="row mt-5" id="reviews">
                     <div class="col-12">
                         <div class="container shadow py-3 px-3 px-md-5 bg-white">
@@ -238,9 +177,6 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
             </div>
         </div>
     </div>
