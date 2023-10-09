@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% load friendshiptags %}
+
 {% block content %}
 
 <section class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center py-5 main-bg"
@@ -49,9 +49,10 @@
                                 </p>
                                 <!-- Add link to whatsapp -->
                                 <a href="https://wa.me/{{ profile.phone_number }}"
-                                    class="text-decoration-none btn btn-primary text-light" target="_blank" rel="noopener">
-                                        <i class="bi bi-whatsapp me-2"></i>
-                                        {{ profile.phone_number }}
+                                    class="text-decoration-none btn btn-primary text-light" target="_blank"
+                                    rel="noopener">
+                                    <i class="bi bi-whatsapp me-2"></i>
+                                    {{ profile.phone_number }}
                                     Send Message
                                 </a>
                             </div>
@@ -128,16 +129,34 @@
                             <hr>
                             <div class="container m-0 px-0">
                                 <div class="p-3 review bg-light">
-                                    <div class="d-flex align-items-start">
+                                    <div class="d-flex align-items-center">
                                         <a class="text-decoration-none text-secondary" href="">
                                             <img class="rounded-circle shadow-1-strong me-3"
                                                 src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
                                                 alt="avatar" width="50" height="50" />
                                         </a>
-                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <div class="d-flex w-100 align-items-start justify-content-between">
                                             <a class="text-secondary mb-1 ms-0" href="">Test User</a>
+                                            <div class="dropstart">
+                                                <i class="bi bi-three-dots-vertical border rounded-circle p-1 d-flex align-items-center justify-content-center" data-bs-toggle="dropdown"></i>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="bi bi-trash3 me-2 text-primary"></i>
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="bi bi-pencil-square me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
+                                    <hr class="text-muted">
                                     <p class="my-0">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                                         do eiusmod tempor incididunt ut labore et dolore magna
@@ -150,11 +169,8 @@
                                         <i class="bi bi-heart me-3 text-danger small"></i>
                                         <p class="m-0 me-0 small">21 Likes</p>
                                     </a>
-                                    <p class="d-flex flex-column align-items-start text-danger small m-0">
-                                        January 12, 2020
-                                    </p>
                                 </div>
-                                <hr />
+                                <hr>
                             </div>
                             <form method="post">
                                 {% csrf_token %}
