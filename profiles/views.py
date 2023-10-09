@@ -14,8 +14,6 @@ from cities_light.models import Region, City
 
 from .models import Profile
 from . import forms
-from reviews.forms import ReviewForm
-from reviews.models import Review
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -45,19 +43,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
 
-        # Get the reviews
-        try:
-            if user == request.user:
-                reviews = Review.objects.filter(profile=request.user.profile)
-            else:
-                reviews = Review.objects.filter(profile=user.profile)
-        except Review.DoesNotExist:
-            reviews = None
-
         return render(request, 'profile_details.html', {
             'profile': user.profile,
-            'review_form': ReviewForm(),
-            'reviews': reviews,
         })
 
     def post(self, request, *args, **kwargs):
@@ -67,27 +54,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
 
-        # Get the review form
-        review_form = ReviewForm(request.POST)
-
-        if review_form.is_valid():
-            # Create the review object but don't save it yet
-            review = review_form.save(commit=False)
-
-            # Assign the current user to the review
-            review.user = request.user
-
-            # Assign the review to the profile
-            review.profile = user.profile
-
-            # Save the review to the database
-            review.save()
-        else:
-            review_form = ReviewForm()
-
         return render(request, 'profile_details.html', {
             'profile': user.profile,
-            'review_form': review_form,
         })
 
 
