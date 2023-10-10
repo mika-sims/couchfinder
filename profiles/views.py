@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, logout
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -14,6 +14,8 @@ from cities_light.models import Region, City
 
 from .models import Profile
 from . import forms
+from reviews.models import Review
+from reviews.forms import ReviewForm
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -42,9 +44,17 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
+        
+        # Get all the reviews for the profile
+        reviews = Review.objects.filter(profile=user.profile)
+        
+        # Get the review form
+        review_form = ReviewForm()
 
-        return render(request, 'profile_details.html', {
+        return render(request, self.template_name, {
             'profile': user.profile,
+            'review_form': review_form,
+            'reviews': reviews,
         })
 
     def post(self, request, *args, **kwargs):
@@ -54,8 +64,32 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
 
+        # Get all the reviews for the profile
+        reviews = Review.objects.filter(profile=user.profile)
+
+        # Get the review form
+        review_form = ReviewForm(request.POST)
+
+        # Check if the form is valid
+        if review_form.is_valid():
+            # Create the review object but don't save it yet
+            content = review_form.cleaned_data.get('content')
+            review = Review(
+                user=request.user,
+                profile=user.profile,
+                content=content,
+            )
+            review.save()
+            return HttpResponseRedirect(reverse('profiles:user-profile', kwargs={'pk': user_pk}))
+        else:
+            messages.error(request, 'Error posting review.')
+            review_form = ReviewForm()
+
+
         return render(request, 'profile_details.html', {
             'profile': user.profile,
+            'reviews': reviews,
+            'review_form': review_form,
         })
 
 
