@@ -125,20 +125,34 @@
                 <div class="row mt-5" id="reviews">
                     <div class="col-12">
                         <div class="container shadow py-3 px-3 px-md-5 bg-white">
-                            <p class="nav-link text-danger">User Reviews</p>
+                            <p class="nav-link">
+                                User Reviews
+                                <!-- Count the reviews -->
+                                <span class="badge rounded-pill bg-danger text-light">
+                                    {{ reviews|length }}
+                                </span>
+                            </p>
                             <hr>
+                            {% if reviews %}
+                            {% for review in reviews %}
                             <div class="container m-0 px-0">
                                 <div class="p-3 review bg-light">
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center">
                                         <a class="text-decoration-none text-secondary" href="">
                                             <img class="rounded-circle shadow-1-strong me-3"
-                                                src="https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg"
+                                                src="{{ review.user.profile.image.url|default:'https://res.cloudinary.com/couchfinder/image/upload/v1694623533/placeholder_ceudwk.svg'}}"
                                                 alt="avatar" width="50" height="50" />
                                         </a>
                                         <div class="d-flex w-100 align-items-start justify-content-between">
-                                            <a class="text-secondary mb-1 ms-0" href="">Test User</a>
+                                            <div class="container">
+                                                <a class="text-secondary text-decoration-none mb-1 ms-0" href="">
+                                                    {{review.user }}
+                                                </a>
+                                                <p class="small my-0 text-muted">{{ review.created_at|date:"F j, Y" }}</p>
+                                            </div>
                                             <div class="dropstart">
-                                                <i class="bi bi-three-dots-vertical border rounded-circle p-1 d-flex align-items-center justify-content-center" data-bs-toggle="dropdown"></i>
+                                                <i class="bi bi-three-dots-vertical border rounded-circle p-1 d-flex align-items-center justify-content-center"
+                                                    data-bs-toggle="dropdown"></i>
                                                 <ul class="dropdown-menu">
                                                     <li>
                                                         <a class="dropdown-item" href="#">
@@ -158,20 +172,23 @@
                                     </div>
                                     <hr class="text-muted">
                                     <p class="my-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                                        do eiusmod tempor incididunt ut labore et dolore magna
-                                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                                        ullamco laboris nisi ut aliquip consequat.
+                                        {{ review.content }}
                                     </p>
                                 </div>
                                 <div class="small d-flex justify-content-between mt-2">
                                     <a href="#!" class="d-flex align-items-center text-decoration-none ms-1">
                                         <i class="bi bi-heart me-3 text-danger small"></i>
-                                        <p class="m-0 me-0 small">21 Likes</p>
+                                        <p class="m-0 me-0 small">{{review.number_of_likes}} Like</p>
                                     </a>
                                 </div>
                                 <hr>
                             </div>
+                            {% endfor %}
+                            {% else %}
+                            <p class="text-secondary">No reviews yet!</p>
+                            {% endif %}
+
+                            {% if request.user != profile.user %}
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="card-footer py-3 border-0">
@@ -190,6 +207,7 @@
                                     </div>
                                 </div>
                             </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -197,58 +215,5 @@
         </div>
     </div>
 </section>
-<script type="text/javascript">
-    function pictureOverlay() {
-        let updateImgBtn = document.querySelector(".update-img-btn");
-        let profileImgContainer = document.querySelector(
-            ".profile-picture_update-page-container"
-        );
-        let profilePicture = document.querySelector(".profile-picture_update-page");
-        let imageUploadInput = document.querySelector("#id_profile_picture");
-
-        profileImgContainer.addEventListener("mouseenter", function () {
-            updateImgBtn.classList.remove("opacity-0");
-            updateImgBtn.classList.add("opacity-100");
-            updateImgBtn.style.transition = "opacity 0.3s, visibility 0s 0.3s";
-            profilePicture.style.opacity = "0.5";
-            profilePicture.style.transition = "opacity 0.3s";
-        });
-
-        profileImgContainer.addEventListener("mouseleave", function () {
-            updateImgBtn.classList.remove("opacity-100");
-            updateImgBtn.classList.add("opacity-0");
-            updateImgBtn.style.transition = "opacity 0.3s, visibility 0s";
-            profilePicture.style.opacity = "1";
-            profilePicture.style.transition = "opacity 0.3s, visibility 0s";
-        });
-
-        // Handle image upload using AJAX
-        imageUploadInput.addEventListener("change", function () {
-            const formData = new FormData();
-            formData.append("profile_picture", imageUploadInput.files[0]);
-
-            fetch("{% url 'profiles:upload_image' %}", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.image_url) {
-                        // Update the image source
-                        profilePicture.src = data.image_url;
-                    } else {
-                        console.error("Image upload failed:", data.error);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Image upload error:", error);
-                });
-        });
-    }
-    window.addEventListener("DOMContentLoaded", pictureOverlay);
-</script>
 
 {% endblock content %}
