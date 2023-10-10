@@ -51,17 +51,134 @@
   <a class="btn btn-primary text-light mt-5 animate__animated animate__pulse animate__repeat-5" href="#">Join the
     Community</a>
 </section>
+<!-- About Section -->
 <section id="about"
-  class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center main-bg">
-
+    class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
+    <h2 class="text-uppercase test-secondary mt-5">About Couch Finder</h2>
+    <div class="container overflow-x-hidden">
+        <div class="row shadow my-5">
+            <div class="col-md-6">
+                <img src="{% static 'images/about-section-001.svg' %}" class="card-img-top" alt="..."
+                    data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center bg-light p-5">
+                <h5 class="test-secondary text-muted mb-5">Welcome to CouchFinder</h5>
+                <p class="test-secondary" data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine">
+                    Your ultimate destination for finding the perfect couch to crash on
+                    during your travels! We understand that exploring the world is not only about visiting new places,
+                    but also about connecting with the people who live there. That's why we've created a platform that
+                    brings together travelers and hosts, fostering a global community built on trust, adventure, and
+                    cultural exchange.
+                </p>
+            </div>
+        </div>
+        <div class="row shadow my-5">
+            <div class="col-md-6 order-lg-2">
+                <img src="{% static 'images/about-section-002.svg' %}" class="card-img-top" alt="..."
+                    data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine">
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center bg-light p-5 order-lg-1">
+                <h5 class="test-secondary text-muted mb-5">Create Unforgettable Experiences</h5>
+                <p class="test-secondary" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
+                    Couch Finder connects travelers with passionate hosts who share their homes, stories, and cities.
+                    Step outside your comfort zone, immerse yourself in local culture, and create unforgettable travel
+                    experiences. Whether you're a solo adventurer, budget-conscious traveler, or seeking unique
+                    journeys, find your ideal temporary home with Couch Finder.
+                </p>
+            </div>
+        </div>
+        <div class="row shadow my-5">
+            <div class="col-md-6">
+                <img src="{% static 'images/about-section-003.svg' %}" class="card-img-top" alt="..."
+                    data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center bg-light p-5">
+                <h5 class="test-secondary text-muted mb-5">Couch Finder is Safe and Secure</h5>
+                <p class="test-secondary" data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine">
+                    To ensure the safety and security of our community, we have implemented a robust verification
+                    process and offer various tools and features that allow members to build trust and make informed
+                    decisions. Join the CouchFinder community today and embark on a journey that goes beyond the
+                    ordinary.
+                </p>
+            </div>
+        </div>
+    </div>
 </section>
-<section id="how-it-works"
-  class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center main-bg">
 
-</section>
-<section id="faq"
-  class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center main-bg">
-
+<!-- FAQ Section -->
+<section id="faq" class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
+    <img src="{% static 'images/faq-section.svg' %}" alt="faq section image" data-aos="zoom-in" class="overflow-hidden">
+    <h5 class="text-muted my-3">All the answers you're looking for</h5>
+    <hr class="w-50 mx-auto mb-5 border border-2 border-secondary">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush shadow-lg" id="accordionFlush">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                aria-controls="flush-collapseOne">
+                                Is CouchFinder free to use?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlush">
+                            <p class="accordion-body bg-light">Yes, CouchFinder is free to use for both travelers and
+                                hosts. There are no charges or fees for creating an account or making arrangements.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                aria-controls="flush-collapseTwo">
+                                Is it safe to stay with strangers through CouchFinder?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlush">
+                            <p class="accordion-body bg-light">While CouchFinder takes measures to ensure user safety,
+                                it's important to exercise caution and use your judgment when interacting with
+                                strangers. Reading reviews and communicating with potential hosts can help establish
+                                trust and make informed decisions.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                aria-controls="flush-collapseThree">
+                                Can I leave reviews for hosts and guests on CouchFinder?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseThree" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlush">
+                            <p class="accordion-body bg-light">Yes, after your stay or hosting experience, you have the
+                                option to leave a review for your host or guest on CouchFinder. Reviews contribute to
+                                the overall reputation and credibility of the platform's users.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseFour" aria-expanded="false"
+                                aria-controls="flush-collapseFour">
+                                What should I do if I encounter any issues or have concerns during my stay?
+                            </button>
+                        </h2>
+                        <div id="flush-collapseFour" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlush">
+                            <p class="accordion-body bg-light">If you encounter any issues or have concerns during your
+                                stay, it is recommended to communicate openly with your host or guest first. If the
+                                matter cannot be resolved, you can contact CouchFinder's customer support for
+                                assistance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- Hero Section End -->
 {% endblock content %}
