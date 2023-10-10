@@ -9,12 +9,12 @@ class SignalsTest(TestCase):
     # Test suite for the signals.
     def setUp(self):
         self.User = get_user_model().objects.create_user(
-            first_name='Mikail',
-            last_name='Simsek',
-            email='mikailsimsek@mail.com',
-            password='qwerty123'
+            first_name="Mikail",
+            last_name="Simsek",
+            email="mikailsimsek@mail.com",
+            password="qwerty123",
         )
-        
+
         # Check if the profile already exists for the user
         self.profile = Profile.objects.filter(user=self.User).first()
 

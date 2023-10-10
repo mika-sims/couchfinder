@@ -14,14 +14,21 @@ class ProfileFormTests(TestCase):
         """
         form = ProfileForm()
         self.assertEqual(form.Meta.model, Profile)
-        self.assertEqual(form.Meta.fields, (
-            'image',
-            'bio',
-            'occupation',
-            'couch_status',
-            'country',
-            'region',
-            'city',
-        ))
-        self.assertEqual(form.fields['bio'].widget.attrs['placeholder'], 'Tell us about yourself')
-        self.assertEqual(form.fields['occupation'].widget.attrs['placeholder'], 'Your occupation')
+        self.assertEqual(
+            form.Meta.fields,
+            (
+                "image",
+                "bio",
+                "occupation",
+                "couch_status",
+                "country",
+                "region",
+                "city",
+            ),
+        )
+        self.assertEqual(
+            form.fields["bio"].widget.attrs["placeholder"], "Tell us about yourself"
+        )
+        self.assertEqual(
+            form.fields["occupation"].widget.attrs["placeholder"], "Your occupation"
+        )

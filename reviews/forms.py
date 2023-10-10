@@ -6,13 +6,16 @@ class ReviewForm(forms.ModelForm):
     """
     Form for creating a review
     """
+
     class Meta:
         model = Review
-        fields = ('content',)
+        fields = ("content",)
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your review here...'}),
+            "content": forms.Textarea(
+                attrs={"rows": 3, "placeholder": "Write your review here..."}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['content'].label = ''
+        self.fields["content"].label = ""

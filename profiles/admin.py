@@ -8,9 +8,9 @@ class ProfileAdmin(admin.ModelAdmin):
     """
     Custom Profile model admin.
     """
-    list_display = ('user', 'couch_status')
-    list_filter = ('user',)
-    search_fields = ('user',)
-    ordering = ('user',)
-    filter_horizontal = ()
 
+    list_display = ("user", "couch_status")
+    list_filter = ("user",)
+    search_fields = ("user",)
+    ordering = ("user",)
+    filter_horizontal = ()
