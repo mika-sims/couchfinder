@@ -101,13 +101,13 @@
             <div class="collapse navbar-collapse me-lg-3" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto gap-lg-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#home">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'main:homepage' %}#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="{% url 'main:homepage' %}#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#faq">FAQ</a>
+                        <a class="nav-link" href="{% url 'main:homepage' %}#faq">FAQ</a>
                     </li>
                 </ul>
             </div>
