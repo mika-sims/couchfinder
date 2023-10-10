@@ -150,6 +150,7 @@
                                                 </a>
                                                 <p class="small my-0 text-muted">{{ review.created_at|date:"F j, Y" }}</p>
                                             </div>
+                                            {% if request.user == review.user %}
                                             <div class="dropstart">
                                                 <i class="bi bi-three-dots-vertical border rounded-circle p-1 d-flex align-items-center justify-content-center"
                                                     data-bs-toggle="dropdown"></i>
@@ -168,6 +169,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <hr class="text-muted">
