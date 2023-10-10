@@ -148,7 +148,8 @@
                                                 <a class="text-secondary text-decoration-none mb-1 ms-0" href="">
                                                     {{review.user }}
                                                 </a>
-                                                <p class="small my-0 text-muted">{{ review.created_at|date:"F j, Y" }}</p>
+                                                <p class="small my-0 text-muted">{{ review.created_at|date:"F j, Y" }}
+                                                </p>
                                             </div>
                                             {% if request.user == review.user %}
                                             <div class="dropstart">
@@ -156,13 +157,14 @@
                                                     data-bs-toggle="dropdown"></i>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item" href="{% url 'profiles:update-review' pk=review.pk %}">
+                                                        <a class="dropdown-item"
+                                                            href="{% url 'profiles:update-review' pk=review.pk %}">
                                                             <i class="bi bi-trash3 me-2 text-primary"></i>
                                                             Edit
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="#">
+                                                        <a class="dropdown-item" href="{% url 'profiles:delete-review' pk=review.pk %}">
                                                             <i class="bi bi-pencil-square me-2 text-danger"></i>
                                                             Delete
                                                         </a>
