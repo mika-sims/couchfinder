@@ -18,7 +18,6 @@ Contact Information: mikailsimsek.trb@gmail.com
 
 
 import os
-import sys
 import dj_database_url
 from pathlib import Path
 
@@ -30,7 +29,7 @@ if os.path.exists("env.py"):
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Template Directory of the project
-TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # Project Secret Key
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -98,7 +97,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
