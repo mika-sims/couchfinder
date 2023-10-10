@@ -18,4 +18,5 @@ urlpatterns = [
          name='account-deactivate-done'),
     path('profile-search/', views.ProfileSearchView.as_view(), name='profile-search'),
     path('update-review/<int:pk>/', views.UpdateReviewView.as_view(), name='update-review'),
+    path('delete-review/<int:pk>/', views.DeleteReviewView.as_view(), name='delete-review'),
 ]
