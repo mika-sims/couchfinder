@@ -15,4 +15,4 @@ class ReviewForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['content'].label = 'Write a review'
+        self.fields['content'].label = ''
