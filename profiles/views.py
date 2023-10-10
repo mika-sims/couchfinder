@@ -306,3 +306,29 @@ class UpdateReviewView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, 'Review updated.')
         return super().form_valid(form)
 
+
+class DeleteReviewView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    View for deleting a review.
+    """
+    model = Review
+    template_name = 'review_delete.html'
+
+    def test_func(self):
+        # Check if the user is the author of the review
+        review = self.get_object()
+        return self.request.user == review.user
+
+    def get_success_url(self):
+        # Get the profile associated with the review
+        profile = get_object_or_404(Profile, pk=self.get_object().profile.pk)
+        profile_pk = profile.user.pk
+
+        # You should return a valid URL here
+        return reverse_lazy('profiles:user-profile', kwargs={'pk': profile_pk})
+
+    def delete(self, request, *args, **kwargs):
+        # Delete the review and display a success message
+        messages.success(self.request, 'Review deleted.')
+        return super().delete(request, *args, **kwargs)
+
