@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model, logout
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.mail import EmailMessage
@@ -7,8 +7,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
-from django.views.generic import View, DetailView, UpdateView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import View, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from allauth.account.views import PasswordChangeView as AllauthPasswordChangeView
 from cities_light.models import Region, City
 
@@ -44,10 +44,10 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
         # Retrieve the user associated with the profile
         user = get_object_or_404(get_user_model(), pk=user_pk)
-        
+
         # Get all the reviews for the profile
         reviews = Review.objects.filter(profile=user.profile)
-        
+
         # Get the review form
         review_form = ReviewForm()
 
@@ -84,7 +84,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         else:
             messages.error(request, 'Error posting review.')
             review_form = ReviewForm()
-
 
         return render(request, 'profile_details.html', {
             'profile': user.profile,
@@ -284,3 +283,26 @@ class ProfileSearchView(View):
         }
 
         return render(request, self.template_name, context)
+
+
+class UpdateReviewView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    View for updating a review.
+    """
+    model = Review
+    form_class = ReviewForm
+    template_name = 'review_update.html'
+
+    def get_success_url(self):
+        return reverse('profiles:user-profile', kwargs={'pk': self.object.profile.user.pk})
+    
+    def test_func(self):
+        # Check if the user is the author of the review
+        review = self.get_object()
+        return self.request.user == review.user
+    
+    def form_valid(self, form):
+        # Save the review and display a success message
+        messages.success(self.request, 'Review updated.')
+        return super().form_valid(form)
+
